@@ -14,7 +14,7 @@ const Traversal = () => {
   const [intervalId, setIntervalId] = useState(null);
   const [speed, setSpeed] = useState(1000);
   const [traversalName, setTraversalName] = useState("");
-  const [numNodes, setNumNodes] = useState(10);
+  const [numNodes, setNumNodes] = useState(50);
 
   const graphRef = useRef(null);
 
