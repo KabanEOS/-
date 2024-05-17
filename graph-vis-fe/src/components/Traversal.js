@@ -45,11 +45,13 @@ const Traversal = () => {
       const graph = await generateRandomGraph(numNodes);
       const viewportWidth = graphRef.current.clientWidth;
       const viewportHeight = graphRef.current.clientHeight;
+      const nodeSize = Math.max(10, Math.min(30, 1000 / numNodes));
       const nodesWithPositions = calculateNodePositions(
         graph.nodes,
         graph.edges,
         viewportWidth,
-        viewportHeight
+        viewportHeight,
+        nodeSize
       );
       setNodes(nodesWithPositions);
       setEdges(graph.edges);
@@ -65,7 +67,8 @@ const Traversal = () => {
     nodes,
     edges,
     viewportWidth,
-    viewportHeight
+    viewportHeight,
+    nodeSize
   ) => {
     const nodeMap = new Map(
       nodes.map((node) => [node.id, { ...node, children: [] }])
@@ -77,39 +80,58 @@ const Traversal = () => {
     const root = nodeMap.get(nodes[0].id);
     const positions = {};
 
-    // Calculate levels
+    // Calculate levels and widths
     const levels = [];
+    const widths = [];
+
     const buildLevels = (node, depth = 0) => {
       if (!levels[depth]) {
         levels[depth] = [];
       }
       levels[depth].push(node);
+      if (!widths[depth]) {
+        widths[depth] = 0;
+      }
+      widths[depth] += nodeSize * 2; // Add node size spacing
       node.children.forEach((child) => buildLevels(child, depth + 1));
     };
 
     buildLevels(root);
 
     const depthCount = levels.length;
-    const levelSeparation = Math.min(100, viewportHeight / (depthCount + 1)); // Adjust based on graph depth and viewport height
-    let nodeSeparation;
+    const levelSeparation = Math.min(100, viewportHeight / (depthCount + 1));
+    const minNodeSeparation = nodeSize * 2;
+    const maxLevelWidth = Math.max(...widths);
+    const nodeSeparation = Math.max(
+      minNodeSeparation,
+      viewportWidth / maxLevelWidth
+    );
 
-    if (nodes.length <= 50) {
-      nodeSeparation = Math.min(100, viewportWidth / (nodes.length + 1)); // Adjust based on node count and viewport width
-    } else {
-      nodeSeparation = viewportWidth / (nodes.length * 0.35); // Make nodes more compact for larger graphs
-    }
+    const calculateSubtreeWidth = (node) => {
+      if (node.children.length === 0) {
+        return nodeSize * 2;
+      }
+      return node.children.reduce((width, child) => {
+        return width + calculateSubtreeWidth(child);
+      }, 0);
+    };
 
-    levels.forEach((nodesAtLevel, depth) => {
-      const levelWidth = nodesAtLevel.length * nodeSeparation;
-      const startX = Math.max(0, (viewportWidth - levelWidth) / 2);
-
-      nodesAtLevel.forEach((node, index) => {
-        positions[node.id] = {
-          x: Math.round(startX + index * nodeSeparation), // Round to nearest integer
-          y: Math.round((depth + 1) * levelSeparation), // Round to nearest integer
-        };
+    const setPositions = (node, depth, xOffset) => {
+      const subtreeWidth = calculateSubtreeWidth(node);
+      const x = xOffset + subtreeWidth / 2;
+      positions[node.id] = {
+        x: Math.round(x),
+        y: Math.round((depth + 1) * levelSeparation),
+      };
+      let childXOffset = xOffset;
+      node.children.forEach((child) => {
+        setPositions(child, depth + 1, childXOffset);
+        childXOffset += calculateSubtreeWidth(child);
       });
-    });
+    };
+
+    const rootSubtreeWidth = calculateSubtreeWidth(root);
+    setPositions(root, 0, (viewportWidth - rootSubtreeWidth) / 2);
 
     return nodes.map((node) => ({
       ...node,
@@ -156,8 +178,6 @@ const Traversal = () => {
         <Graph
           nodes={nodes}
           edges={edges}
-          setNodes={setNodes}
-          setEdges={setEdges}
           currentNode={currentNode}
           visitedNodes={sequence.slice(0, currentStep + 1)}
         />

@@ -1,7 +1,6 @@
 import React from "react";
 
 const Graph = ({ nodes, edges, currentNode, visitedNodes }) => {
-  // Adjust node size based on the number of nodes and viewport width
   const nodeSize = Math.max(10, Math.min(30, 1000 / nodes.length));
 
   return (
