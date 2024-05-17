@@ -1,44 +1,35 @@
-import React, { useState } from "react";
-import Node from "./Node";
-import Edge from "./Edge";
+import React from "react";
 
-const Graph = ({
-  nodes,
-  edges,
-  setNodes,
-  setEdges,
-  currentNode,
-  visitedNodes,
-}) => {
-  const [newNodeId, setNewNodeId] = useState(nodes.length + 1);
-
-  const addNode = (x, y) => {
-    setNodes([...nodes, { id: newNodeId, x, y }]);
-    setNewNodeId(newNodeId + 1);
-  };
-
-  const addEdge = (source, target) => {
-    setEdges([...edges, { source, target }]);
-  };
-
-  const handleSvgClick = (e) => {
-    const rect = e.target.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-    addNode(x, y);
-  };
+const Graph = ({ nodes, edges, currentNode, visitedNodes }) => {
+  // Adjust node size based on the number of nodes and viewport width
+  const nodeSize = Math.max(10, Math.min(30, 1000 / nodes.length));
 
   return (
-    <svg width="1600" height="1200" onClick={handleSvgClick}>
+    <svg width="100%" height="100%">
       {edges.map((edge, index) => (
-        <Edge key={index} edge={edge} nodes={nodes} />
+        <line
+          key={index}
+          x1={nodes.find((node) => node.id === edge.source).x}
+          y1={nodes.find((node) => node.id === edge.source).y}
+          x2={nodes.find((node) => node.id === edge.target).x}
+          y2={nodes.find((node) => node.id === edge.target).y}
+          stroke="black"
+          strokeWidth="2"
+        />
       ))}
       {nodes.map((node) => (
-        <Node
+        <circle
           key={node.id}
-          node={node}
-          currentNode={currentNode}
-          visitedNodes={visitedNodes}
+          cx={node.x}
+          cy={node.y}
+          r={nodeSize}
+          fill={
+            currentNode === node.id
+              ? "red"
+              : visitedNodes.includes(node.id)
+                ? "green"
+                : "blue"
+          }
         />
       ))}
     </svg>

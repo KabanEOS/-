@@ -1,4 +1,5 @@
-from models import GraphDTO
+import random
+from models import GraphDTO, NodeDTO, EdgeDTO
 
 
 def generate_bfs_sequence(graph: GraphDTO) -> list[int]:
@@ -39,3 +40,17 @@ def generate_dfs_sequence(graph: GraphDTO) -> list[int]:
                     stack.append(edge.target)
 
     return sequence
+
+
+def generate_random_graph(num_nodes: int) -> GraphDTO:
+    nodes = [NodeDTO(id=i, x=0, y=0) for i in range(num_nodes)]
+    edges = []
+
+    # Create a tree-like structure
+    for i in range(1, num_nodes):
+        parent = random.randint(
+            0, i - 1
+        )  # Each node connects to a random previous node
+        edges.append(EdgeDTO(source=parent, target=i))
+
+    return GraphDTO(nodes=nodes, edges=edges)
