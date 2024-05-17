@@ -1,40 +1,49 @@
-import React, { useState, useEffect } from 'react';
-import { getBfsTraversal, getDfsTraversal } from '../services/api';
-import Graph from './Graph'; // Ensure Graph is imported
+import React, { useState, useEffect } from "react";
+import { getBfsTraversal, getDfsTraversal } from "../services/api";
+import Graph from "./Graph";
 
 const Traversal = ({ nodes, edges }) => {
-  const [snapshots, setSnapshots] = useState([]);
-  const [currentSnapshot, setCurrentSnapshot] = useState(0);
+  const [sequence, setSequence] = useState([]);
+  const [currentStep, setCurrentStep] = useState(0);
   const [intervalId, setIntervalId] = useState(null);
-  const [speed, setSpeed] = useState(1000); // Default speed
-  const [traversalName, setTraversalName] = useState('BFS');
+  const [speed, setSpeed] = useState(1000);
+  const [traversalName, setTraversalName] = useState("");
 
   const fetchBfsTraversal = async () => {
-    const traversal = await getBfsTraversal({ nodes, edges });
-    setSnapshots(traversal);
-    setCurrentSnapshot(0);
-    setTraversalName('BFS');
+    try {
+      const traversal = await getBfsTraversal({ nodes, edges });
+      setSequence(traversal);
+      setCurrentStep(0);
+      setTraversalName("BFS");
+    } catch (error) {
+      console.error("Error during BFS traversal:", error);
+    }
   };
 
   const fetchDfsTraversal = async () => {
-    const traversal = await getDfsTraversal({ nodes, edges });
-    setSnapshots(traversal);
-    setCurrentSnapshot(0);
-    setTraversalName('DFS');
+    try {
+      const traversal = await getDfsTraversal({ nodes, edges });
+      setSequence(traversal);
+      setCurrentStep(0);
+      setTraversalName("DFS");
+    } catch (error) {
+      console.error("Error during DFS traversal:", error);
+    }
   };
 
   useEffect(() => {
-    if (snapshots.length > 0) {
+    if (sequence.length > 0) {
       const id = setInterval(() => {
-        setCurrentSnapshot((prev) => (prev < snapshots.length - 1 ? prev + 1 : prev));
+        setCurrentStep((prev) =>
+          prev < sequence.length - 1 ? prev + 1 : prev
+        );
       }, speed);
       setIntervalId(id);
       return () => clearInterval(id);
     }
-  }, [snapshots, speed]);
+  }, [sequence, speed]);
 
-  const currentNodes = snapshots.length > 0 ? snapshots[currentSnapshot].nodes : nodes;
-  const currentSnapshotData = snapshots.length > 0 ? snapshots[currentSnapshot] : { current_node: null, visited_nodes: [] };
+  const currentNode = sequence.length > 0 ? sequence[currentStep] : null;
 
   return (
     <div>
@@ -50,12 +59,12 @@ const Traversal = ({ nodes, edges }) => {
       />
       <p>Traversal: {traversalName}</p>
       <Graph
-        nodes={currentNodes}
+        nodes={nodes}
         edges={edges}
         setNodes={() => {}}
         setEdges={() => {}}
-        currentNode={currentSnapshotData.current_node}
-        visitedNodes={currentSnapshotData.visited_nodes}
+        currentNode={currentNode}
+        visitedNodes={sequence.slice(0, currentStep + 1)}
       />
     </div>
   );
