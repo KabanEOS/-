@@ -14,7 +14,7 @@ const Edge = ({ edge, nodes }) => {
       y1={sourceNode.y}
       x2={targetNode.x}
       y2={targetNode.y}
-      stroke="black"
+      stroke="white"
       strokeWidth="2" // Ensure stroke width is sufficient for visibility
     />
   );
