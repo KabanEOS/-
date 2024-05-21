@@ -1,16 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
+import { useNodePositions } from "../contexts/NodePositionsContext";
 import "./../styles/spinningGraphs.styles.scss";
+import "./../styles/particle.styles.scss";
 
 const SpinningGraph = ({ nodes }) => {
-  const radius = 180; // Adjust the radius as needed
-  const centerX = window.innerWidth / 2; // Center x
-  const centerY = window.innerHeight / 2.7; // Center y
+  const radius = 180;
+  const centerX = window.innerWidth / 2;
+  const centerY = window.innerHeight / 2.7;
   const minNodeSize = 40;
   const maxNodeSize = 60;
   const svgRef = useRef(null);
   const spinTimeRef = useRef(50000);
-  const positionsRef = useRef(new Array(nodes.length).fill(null));
+  const { positions, setPositions } = useNodePositions();
 
   const minOscillationSize = 30;
   const maxOscillationSize = 30;
@@ -47,7 +49,7 @@ const SpinningGraph = ({ nodes }) => {
         (maxNodeSize - minNodeSize) *
           (0.5 + 0.5 * Math.cos(angle - Math.PI / 2));
 
-      positionsRef.current[index] = { cx, cy, nodeSize };
+      positions[index] = { cx, cy, nodeSize };
 
       const circle = svg.querySelector(`#node-${index}`);
       const foreignObject = svg.querySelector(`#foreign-${index}`);
@@ -59,6 +61,8 @@ const SpinningGraph = ({ nodes }) => {
       foreignObject.setAttribute("width", nodeSize * 2);
       foreignObject.setAttribute("height", nodeSize);
     });
+
+    setPositions([...positions]);
 
     nodes.forEach((sourceNode, sourceIndex) => {
       nodes.forEach((targetNode, targetIndex) => {
@@ -109,7 +113,7 @@ const SpinningGraph = ({ nodes }) => {
           });
         })}
         {nodes.map((node, index) => {
-          const position = positionsRef.current[index] || {
+          const position = positions[index] || {
             cx: centerX,
             cy: centerY,
             nodeSize: minNodeSize,
