@@ -1,4 +1,3 @@
-// src/components/TraversalDemo.js
 import React from "react";
 import Traversal from "./../../components/Traversal";
 

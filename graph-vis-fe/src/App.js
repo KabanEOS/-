@@ -7,7 +7,6 @@ import SpinningGraph from "./components/SpinningGraph";
 // import NodeInfo from "./components/NodeInfo";
 import { NodePositionsProvider } from "./contexts/NodePositionsContext.jsx";
 import "./styles/spinningGraphs.styles.scss";
-import Particles from "./components/Particles.jsx";
 
 const App = () => {
   const nodes = [
@@ -19,7 +18,6 @@ const App = () => {
   return (
     <NodePositionsProvider>
       <div className="App">
-        <Particles />
         <Router>
           <SpinningGraph nodes={nodes} />
           <Routes>

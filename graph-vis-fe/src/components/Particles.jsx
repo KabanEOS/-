@@ -1,10 +1,17 @@
 import React, { useEffect, useRef } from "react";
-import { useNodePositions } from "../contexts/NodePositionsContext";
 import "./../styles/particle.styles.scss";
 
-const Particles = () => {
+// Constants for easy configuration
+const NUMBER_OF_PARTICLES = 180;
+const PARTICLE_COLOR = "#ffffff";
+const NODE_PARTICLE_COLOR = "#ff0000";
+const PARTICLE_SIZE = { min: 2, max: 5 };
+const NODE_PARTICLE_SIZE = 10;
+const PARTICLE_SPEED = { min: -0.15, max: 0.25 };
+const CONNECTION_DISTANCE = (window.innerWidth / 7) * (window.innerHeight / 7);
+
+const Particles = ({ positions }) => {
   const canvasRef = useRef(null);
-  const { positions } = useNodePositions();
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -12,20 +19,9 @@ const Particles = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    let mouse = {
-      x: null,
-      y: null,
-      radius: (canvas.height / 80) * (canvas.width / 80),
-    };
-
-    window.addEventListener("mousemove", (event) => {
-      mouse.x = event.x;
-      mouse.y = event.y;
-    });
-
     const particlesArray = [];
-    const numberOfParticles = 380;
 
+    // Particle class
     class Particle {
       constructor(x, y, directionX, directionY, size, color) {
         this.x = x;
@@ -33,6 +29,7 @@ const Particles = () => {
         this.directionX = directionX;
         this.directionY = directionY;
         this.size = size;
+        this.baseSize = size;
         this.color = color;
       }
 
@@ -51,47 +48,55 @@ const Particles = () => {
           this.directionY = -this.directionY;
         }
 
-        // Check collision detection - mouse position / particle position
-        const dx = mouse.x - this.x;
-        const dy = mouse.y - this.y;
-        const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < mouse.radius + this.size) {
-          if (mouse.x < this.x && this.x < canvas.width - this.size * 10) {
-            this.x += 10;
-          }
-          if (mouse.x > this.x && this.x > this.size * 10) {
-            this.x -= 10;
-          }
-          if (mouse.y < this.y && this.y < canvas.height - this.size * 10) {
-            this.y += 10;
-          }
-          if (mouse.y > this.y && this.y > this.size * 10) {
-            this.y -= 10;
-          }
-        }
-
         this.x += this.directionX;
         this.y += this.directionY;
         this.draw();
       }
     }
 
+    // Initialize particles
     const init = () => {
       particlesArray.length = 0;
-      for (let i = 0; i < numberOfParticles; i++) {
-        const size = Math.random() * 5;
-        const x = Math.random() * (window.innerWidth - size * 2);
-        const y = Math.random() * (window.innerHeight - size * 2);
-        const directionX = Math.random() * 0.4 - 0.2;
-        const directionY = Math.random() * 0.4 - 0.2;
-        const color = "#ffffff";
+
+      // Add particles at the positions of the spinning graph nodes
+      positions.forEach((pos) => {
+        if (pos) {
+          particlesArray.push(
+            new Particle(
+              pos.cx,
+              pos.cy,
+              Math.random() * (PARTICLE_SPEED.max - PARTICLE_SPEED.min) +
+                PARTICLE_SPEED.min,
+              Math.random() * (PARTICLE_SPEED.max - PARTICLE_SPEED.min) +
+                PARTICLE_SPEED.min,
+              NODE_PARTICLE_SIZE,
+              NODE_PARTICLE_COLOR
+            )
+          );
+        }
+      });
+
+      // Add remaining particles
+      for (let i = positions.length; i < NUMBER_OF_PARTICLES; i++) {
+        const size =
+          Math.random() * (PARTICLE_SIZE.max - PARTICLE_SIZE.min) +
+          PARTICLE_SIZE.min;
+        const x = Math.random() * canvas.width;
+        const y = Math.random() * canvas.height;
+        const directionX =
+          Math.random() * (PARTICLE_SPEED.max - PARTICLE_SPEED.min) +
+          PARTICLE_SPEED.min;
+        const directionY =
+          Math.random() * (PARTICLE_SPEED.max - PARTICLE_SPEED.min) +
+          PARTICLE_SPEED.min;
 
         particlesArray.push(
-          new Particle(x, y, directionX, directionY, size, color)
+          new Particle(x, y, directionX, directionY, size, PARTICLE_COLOR)
         );
       }
     };
 
+    // Connect particles with lines
     const connect = () => {
       let opacityValue = 1;
       for (let a = 0; a < particlesArray.length; a++) {
@@ -101,7 +106,7 @@ const Particles = () => {
               (particlesArray[a].x - particlesArray[b].x) +
             (particlesArray[a].y - particlesArray[b].y) *
               (particlesArray[a].y - particlesArray[b].y);
-          if (distance < (canvas.width / 7) * (canvas.height / 7)) {
+          if (distance < CONNECTION_DISTANCE) {
             opacityValue = 1 - distance / 20000;
             context.strokeStyle = `rgba(255,255,255,${opacityValue})`;
             context.lineWidth = 1;
@@ -114,9 +119,10 @@ const Particles = () => {
       }
     };
 
+    // Animate particles
     const animate = () => {
       requestAnimationFrame(animate);
-      context.clearRect(0, 0, window.innerWidth, window.innerHeight);
+      context.clearRect(0, 0, canvas.width, canvas.height);
 
       for (let i = 0; i < particlesArray.length; i++) {
         particlesArray[i].update();
@@ -130,7 +136,6 @@ const Particles = () => {
     window.addEventListener("resize", () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
-      mouse.radius = (canvas.height / 80) * (canvas.width / 80);
       init();
     });
 
@@ -140,12 +145,8 @@ const Particles = () => {
         canvas.height = window.innerHeight;
         init();
       });
-      window.removeEventListener("mousemove", (event) => {
-        mouse.x = event.x;
-        mouse.y = event.y;
-      });
     };
-  }, []);
+  }, [positions]);
 
   return <canvas ref={canvasRef} id="particles-js"></canvas>;
 };
