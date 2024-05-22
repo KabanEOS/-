@@ -2,27 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "./../styles/particle.styles.scss";
 
-// Constants for easy configuration
-const NUMBER_OF_PARTICLES = 380;
-const PARTICLE_COLOR = "#ffffff";
-const NODE_PARTICLE_COLOR = "#ff0000";
-const PARTICLE_SIZE = { min: 2, max: 5 };
-const NODE_PARTICLE_SIZE = { min: 40, max: 60 };
-const PARTICLE_SPEED = { min: -0.2, max: 0.2 };
-const CONNECTION_DISTANCE = (window.innerWidth / 7) * (window.innerHeight / 7);
-const MIN_SPEED = -0.2;
-const MAX_SPEED = 0.4;
-const SELF_MOVEMENT = 0.01;
-
-// Mouse interaction constants
-const SNAP_DISTANCE = 100;
-const SLOW_DOWN_FACTOR = 0.98;
-const ATTRACTION_FACTOR = 0.01;
-
-// Control parameter
-const MOUSE_EFFECT = 2; // Range from -10 to 10
-
-const Particles = ({ positions }) => {
+// Particles component now receives control parameters as props
+const Particles = ({ positions, controls }) => {
   const canvasRef = useRef(null);
   const particlesArray = useRef([]);
   const nodeParticlesArray = useRef([]);
@@ -34,6 +15,18 @@ const Particles = ({ positions }) => {
     const context = canvas.getContext("2d");
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    const {
+      SNAP_DISTANCE,
+      SLOW_DOWN_FACTOR,
+      ATTRACTION_FACTOR,
+      MOUSE_EFFECT,
+      MIN_SPEED,
+      MAX_SPEED,
+      SELF_MOVEMENT,
+      NODE_PARTICLE_SIZE_MIN,
+      NODE_PARTICLE_SIZE_MAX,
+    } = controls;
 
     // Particle class
     class Particle {
@@ -134,12 +127,10 @@ const Particles = ({ positions }) => {
             new Particle(
               pos.cx,
               pos.cy,
-              Math.random() * (PARTICLE_SPEED.max - PARTICLE_SPEED.min) +
-                PARTICLE_SPEED.min,
-              Math.random() * (PARTICLE_SPEED.max - PARTICLE_SPEED.min) +
-                PARTICLE_SPEED.min,
-              NODE_PARTICLE_SIZE.min,
-              NODE_PARTICLE_COLOR,
+              Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED,
+              Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED,
+              NODE_PARTICLE_SIZE_MIN,
+              "#ff0000",
               true,
               pos.node
             )
@@ -148,17 +139,15 @@ const Particles = ({ positions }) => {
       });
 
       // Add remaining particles
-      for (let i = 0; i < NUMBER_OF_PARTICLES; i++) {
-        const size =
-          Math.random() * (PARTICLE_SIZE.max - PARTICLE_SIZE.min) +
-          PARTICLE_SIZE.min;
+      for (let i = 0; i < 380; i++) {
+        const size = Math.random() * (5 - 2) + 2;
         const x = Math.random() * canvas.width;
         const y = Math.random() * canvas.height;
         const directionX = Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
         const directionY = Math.random() * (MAX_SPEED - MIN_SPEED) + MIN_SPEED;
 
         particlesArray.current.push(
-          new Particle(x, y, directionX, directionY, size, PARTICLE_COLOR)
+          new Particle(x, y, directionX, directionY, size, "#ffffff")
         );
       }
     };
@@ -173,7 +162,7 @@ const Particles = ({ positions }) => {
               (particlesArray.current[a].x - particlesArray.current[b].x) +
             (particlesArray.current[a].y - particlesArray.current[b].y) *
               (particlesArray.current[a].y - particlesArray.current[b].y);
-          if (distance < CONNECTION_DISTANCE) {
+          if (distance < (window.innerWidth / 7) * (window.innerHeight / 7)) {
             opacityValue = 1 - distance / 20000;
             context.strokeStyle = `rgba(255,255,255,${opacityValue})`;
             context.lineWidth = 1;
@@ -203,7 +192,7 @@ const Particles = ({ positions }) => {
               nodeParticlesArray.current[b].y) *
               (nodeParticlesArray.current[a].y -
                 nodeParticlesArray.current[b].y);
-          if (distance < CONNECTION_DISTANCE) {
+          if (distance < (window.innerWidth / 7) * (window.innerHeight / 7)) {
             opacityValue = 1 - distance / 20000;
             context.strokeStyle = `rgba(255,192,203,${opacityValue})`;
             context.lineWidth = 1;
@@ -306,7 +295,7 @@ const Particles = ({ positions }) => {
         });
       });
     };
-  }, [positions, navigate]);
+  }, [positions, controls, navigate]);
 
   return <canvas ref={canvasRef} id="particles-js"></canvas>;
 };

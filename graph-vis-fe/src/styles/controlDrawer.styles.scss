@@ -4,7 +4,7 @@
   left: 0;
   width: 25vw;
   min-width: 300px;
-  padding-right: 20px;
+  padding-right: 40px;
   height: 100vh;
   z-index: 1000;
   display: flex;
@@ -15,7 +15,7 @@
   .toggle-arrow {
     transform: scale(3.5);
     margin-left: 12px;
-    color: #8e8e8e83;
+    color: #fa7272c1;
   }
 
   &.closed {
@@ -25,8 +25,7 @@
       .toggle-arrow {
         &:hover {
           transform: scale(3.75) translateX(8%);
-          color: #8e8e8e;
-          color: #8e8e8e;
+          color: #ff6347;
           /* Add more hover styles specific to the closed state here */
         }
       }
@@ -56,20 +55,13 @@
     flex-direction: column;
     padding: 20px;
     background-color: #fff;
-    // box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+    overflow-y: auto; /* Enable scrolling */
   }
 
   .controls {
     display: flex;
     flex-direction: column;
     gap: 10px;
-
-    .mock-control {
-      padding: 10px;
-      background-color: #f0f0f0;
-      border-radius: 5px;
-      text-align: center;
-    }
   }
 
   .arrow-always-visible-right-container {

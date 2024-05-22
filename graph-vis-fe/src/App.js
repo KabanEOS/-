@@ -23,7 +23,6 @@ const App = () => {
       <div className="App">
         <Router>
           <SpinningGraph nodes={nodes} />
-          <ControlDrawer />
           <Routes>
             <Route path="/graph-builder" element={<About />} />
             <Route path="/learn-graphs" element={<LearnGraphs />} />

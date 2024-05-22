@@ -16,6 +16,7 @@ export const ControlDrawerProvider = ({ children, initialControls }) => {
     <ControlDrawerContext.Provider
       value={{ isOpen, toggleDrawer, controls, updateControl }}
     >
+      <ControlDrawer />
       {children}
     </ControlDrawerContext.Provider>
   );
