@@ -7,6 +7,8 @@ import SpinningGraph from "./components/SpinningGraph";
 // import NodeInfo from "./components/NodeInfo";
 import { NodePositionsProvider } from "./contexts/NodePositionsContext.jsx";
 import "./styles/spinningGraphs.styles.scss";
+import { ControlDrawerProvider } from "./contexts/DrawerContext.jsx";
+import ControlDrawer from "./components/ControlDrawer/ControlDrawer.jsx";
 
 const App = () => {
   const nodes = [
@@ -17,9 +19,11 @@ const App = () => {
 
   return (
     <NodePositionsProvider>
+      {/* <ControlDrawerProvider> */}
       <div className="App">
         <Router>
           <SpinningGraph nodes={nodes} />
+          <ControlDrawer />
           <Routes>
             <Route path="/graph-builder" element={<About />} />
             <Route path="/learn-graphs" element={<LearnGraphs />} />
@@ -27,6 +31,7 @@ const App = () => {
           </Routes>
         </Router>
       </div>
+      {/* </ControlDrawerProvider> */}
     </NodePositionsProvider>
   );
 };
