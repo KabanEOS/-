@@ -1,0 +1,45 @@
+.unit-container {
+  padding: 10px;
+  background-color: #f0f0f0;
+  border-radius: 5px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 6px;
+
+  &:hover {
+    background-color: #0274ff2b;
+  }
+
+  .number-values {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+    .unit-name {
+      width: 100%;
+      color: #333; /* Dark gray */
+      font-size: 1rem;
+      font-weight: 700; /* Make heading darker and bold */
+    }
+
+    .unit-input {
+      width: 56px;
+      text-align: center;
+    }
+  }
+
+  .range-input {
+    width: 94%;
+  }
+
+  .unit-description {
+    color: #666; /* Smaller gray font */
+    font-size: 0.85rem;
+  }
+}
