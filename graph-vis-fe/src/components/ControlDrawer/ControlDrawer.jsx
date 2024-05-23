@@ -1,7 +1,8 @@
-import React, { useState } from "react";
-import { RiArrowRightWideFill } from "react-icons/ri";
+import React, { useEffect, useState } from "react";
+import { RiArrowRightWideFill, RiHomeFill } from "react-icons/ri";
 import "./../../styles/controlDrawer.styles.scss";
 import ControlDrawerUnit from "./ControlDrawerUnit.jsx";
+import { useLocation } from "react-router-dom";
 
 const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -9,6 +10,13 @@ const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
   };
+
+  const location = useLocation();
+  const [isHomePage, setIsHomePage] = useState(location.pathname === "/");
+
+  useEffect(() => {
+    setIsHomePage(location.pathname === "/");
+  }, [location]);
 
   const descriptions = {
     NUMBER_OF_PARTICLES: "Controls the number of particles in the canvas.",
@@ -57,11 +65,33 @@ const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
         </div>
       </div>
       <div className="arrow-always-visible-right-container">
+        {!isOpen && isHomePage && (
+          <div className="info-hover ">
+            display controls to play with particles mesh algorithm parameters
+          </div>
+        )}{" "}
+        {!isHomePage && (
+          <div className="info-hover movThatMore">
+            Navigate to the home page to move somwhere else and play with cool
+            mesh
+          </div>
+        )}
         <div
           className={`toggle-arrow ${isOpen ? "open" : "closed"}`}
-          onClick={toggleDrawer}
+          onClick={
+            isHomePage
+              ? toggleDrawer
+              : () => {
+                  window.location.href = "/";
+                }
+          }
         >
-          <RiArrowRightWideFill />
+          {isHomePage ? (
+            <RiArrowRightWideFill />
+          ) : (
+            <RiHomeFill className={`${!isHomePage && "squeezeNMoveThat"}`} />
+          )}
+          <div className="background-circle" />
         </div>
       </div>
     </div>

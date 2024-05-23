@@ -11,6 +11,7 @@ const Traversal = () => {
   const [edges, setEdges] = useState([]);
   const [sequence, setSequence] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
+  // @ts-ignore
   const [intervalId, setIntervalId] = useState(null);
   const [speed, setSpeed] = useState(1000);
   const [traversalName, setTraversalName] = useState("");
@@ -43,7 +44,9 @@ const Traversal = () => {
   const fetchRandomGraph = async () => {
     try {
       const graph = await generateRandomGraph(numNodes);
+      // @ts-ignore
       const viewportWidth = graphRef.current.clientWidth;
+      // @ts-ignore
       const viewportHeight = graphRef.current.clientHeight;
       const nodeSize = Math.max(10, Math.min(30, 1000 / numNodes));
       const nodesWithPositions = calculateNodePositions(
@@ -102,6 +105,7 @@ const Traversal = () => {
     const levelSeparation = Math.min(100, viewportHeight / (depthCount + 1));
     const minNodeSeparation = nodeSize * 2;
     const maxLevelWidth = Math.max(...widths);
+    // @ts-ignore
     const nodeSeparation = Math.max(
       minNodeSeparation,
       viewportWidth / maxLevelWidth
@@ -146,6 +150,7 @@ const Traversal = () => {
           prev < sequence.length - 1 ? prev + 1 : prev
         );
       }, speed);
+      // @ts-ignore
       setIntervalId(id);
       return () => clearInterval(id);
     }

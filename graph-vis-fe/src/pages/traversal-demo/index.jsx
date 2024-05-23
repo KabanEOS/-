@@ -1,9 +1,11 @@
 import React from "react";
 import Traversal from "./../../components/Traversal";
+import "./../../styles/traversalPage.styles.scss";
+import "./../../styles/shared.styles.scss";
 
 const TraversalDemo = () => {
   return (
-    <div>
+    <div className="traversal-demo">
       <h2>Traversal Demo</h2>
       <Traversal />
     </div>

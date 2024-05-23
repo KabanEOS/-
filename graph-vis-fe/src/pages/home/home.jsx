@@ -1,12 +1,21 @@
 import React from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
-import ControlDrawer from "../../components/ControlDrawer/ControlDrawer";
-import SpinningGraph from "../../components/SpinningGraph";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
+// import NodeInfo from "./components/NodeInfo";
+import "./styles/spinningGraphs.styles.scss";
+// import { ControlDrawerProvider } from "./contexts/DrawerContext.jsx";
+import GoHomeHalfCircle from "../../components/GoHomeHalfCircle.jsx";
+import SpinningGraph from "../../components/SpinningGraph.jsx";
+import { NodePositionsProvider } from "../../contexts/NodePositionsContext";
 import About from "../about/about";
 import LearnGraphs from "../learn-graphs";
 import TraversalDemo from "../traversal-demo";
 
-const Home = () => {
+const App = () => {
   const nodes = [
     { id: 1, name: "Graph Builder", link: "/graph-builder" },
     { id: 2, name: "Learn Graphs", link: "/learn-graphs" },
@@ -14,17 +23,22 @@ const Home = () => {
   ];
 
   return (
-    <>
-      <SpinningGraph nodes={nodes} />
-      <ControlDrawer />
-      <Routes>
-        <Route path="/" element={<Home />} />
-        <Route path="/graph-builder" element={<About />} />
-        <Route path="/learn-graphs" element={<LearnGraphs />} />
-        <Route path="/traversal-demo" element={<TraversalDemo />} />
-      </Routes>
-    </>
+    <NodePositionsProvider>
+      {/* <ControlDrawerProvider> */}
+      <div className="App">
+        <Router>
+          {/* <GoHomeHalfCircle /> */}
+          <SpinningGraph nodes={nodes} />
+          <Routes>
+            <Route path="/graph-builder" element={<About />} />
+            <Route path="/learn-graphs" element={<LearnGraphs />} />
+            <Route path="/traversal-demo" element={<TraversalDemo />} />
+          </Routes>
+        </Router>
+      </div>
+      {/* </ControlDrawerProvider> */}
+    </NodePositionsProvider>
   );
 };
 
-export default Home;
+export default App;

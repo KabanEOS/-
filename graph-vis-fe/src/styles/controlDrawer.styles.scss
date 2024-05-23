@@ -22,6 +22,26 @@
     transform: translateX(-100%);
 
     .arrow-always-visible-right-container {
+      &:hover {
+        .info-hover {
+          display: block;
+          opacity: 1;
+          animation: fadeIn 0.3s ease-in-out forwards;
+        }
+
+        /* Define the fadeIn animation */
+        @keyframes fadeIn {
+          0% {
+            opacity: 0;
+            transform: translateX(-10%);
+          }
+          100% {
+            opacity: 1;
+            transform: translateX(0);
+          }
+        }
+      }
+
       .toggle-arrow {
         &:hover {
           transform: scale(3.75) translateX(8%);
@@ -30,12 +50,53 @@
         }
       }
     }
+
+    .background-circle {
+      background-color: #fff;
+      border-radius: 50%;
+      width: 70px;
+      height: 70px;
+      position: absolute;
+      margin-top: -46px;
+      right: 0;
+      z-index: -1;
+      box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+      transition:
+        opacity 0.3s ease-in-out,
+        transform 0.3s ease-in-out 0.3s;
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .info-hover {
+    color: #ffffffcc;
+    background-image: radial-gradient(
+      circle,
+      #0000003e,
+      #0000003e 1%,
+      #0000003e 90%
+    );
+    width: 200px;
+    font-size: 25px;
+    margin-left: 300px;
+    text-align: left;
+    position: absolute;
+    z-index: -1;
+    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+    font-family: "Courier New", Courier, monospace;
+    opacity: 0;
+    transform: translateX(-10%);
+    transition:
+      opacity 0.3s ease-in-out,
+      transform 0.3s ease-in-out;
   }
 
   &.opened {
     .arrow-always-visible-right-container {
       transform: translateX(-30px);
       transition: transform 0.3s ease-in-out;
+
       .toggle-arrow {
         transform: scale(3.5) scaleX(-1);
 
@@ -46,6 +107,14 @@
         }
       }
     }
+
+    .background-circle {
+      transition:
+        opacity 0.3s ease-in-out,
+        transform 0.3s ease-in-out;
+      opacity: 0;
+      transform: translateX(-50px);
+    }
   }
 
   .drawer-content {
@@ -55,7 +124,7 @@
     flex-direction: column;
     padding: 20px;
     background-color: #fff;
-    overflow-y: auto; /* Enable scrolling */
+    overflow-y: auto;
   }
 
   .controls {
@@ -71,7 +140,7 @@
     justify-content: center;
     align-items: center;
     position: absolute;
-    right: -30px; /* Adjust this value to stick out more */
+    right: -30px;
 
     .toggle-arrow {
       width: fit-content;
@@ -82,4 +151,20 @@
         color 0.3s; /* Ensure smooth transitions */
     }
   }
+
+  /* Define the fadeOut animation */
+  @keyframes fadeOut {
+    0% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    100% {
+      opacity: 0;
+      transform: translateX(-10%);
+    }
+  }
+}
+
+.squeezeNMoveThat {
+  transform: scale(0.5) translateX(5px);
 }

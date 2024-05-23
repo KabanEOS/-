@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./../styles/spinningGraphs.styles.scss";
 import Particles from "./Particles.jsx";
 import ControlDrawer from "./ControlDrawer/ControlDrawer.jsx";
+import Shadow from "./Shadow.jsx";
 
 const SpinningGraph = ({ nodes }) => {
   const [positions, setPositions] = useState([]);

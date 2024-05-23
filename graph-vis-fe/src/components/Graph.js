@@ -41,7 +41,7 @@ const Graph = ({
           <path
             key={index}
             d={pathD}
-            stroke="black"
+            stroke="white"
             strokeWidth="2"
             fill="none"
           />
@@ -68,14 +68,17 @@ const Graph = ({
               y={node.y - calculatedNodeSize - 5}
               fontSize={calculatedNodeSize / 2}
               textAnchor="middle"
-              fill="black"
+              fill="white"
             >
               {node.name || node.id}
             </text>
           )}
         </g>
       ))}
-      <style jsx>{`
+      <style
+        // @ts-ignore
+        jsx
+      >{`
         .animate-node {
           transition: all 0.3s ease-in-out;
         }
