@@ -6,6 +6,7 @@ import { useLocation } from "react-router-dom";
 
 const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isHovering, setIsHovering] = useState(false);
 
   const toggleDrawer = () => {
     setIsOpen(!isOpen);
@@ -17,6 +18,18 @@ const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
   useEffect(() => {
     setIsHomePage(location.pathname === "/");
   }, [location]);
+
+  const handleMouseEnter = () => {
+    setIsHovering(true);
+  };
+
+  const handleMouseLeave = () => {
+    setIsHovering(false);
+  };
+
+  console.log("🚀 ~ ControlDrawer ~ isHovering:", isHovering);
+  console.log("🚀 ~ ControlDrawer ~ isOpen:", isOpen);
+  console.log("🚀 ~ ControlDrawer ~ isHomePage:", isHomePage);
 
   const descriptions = {
     NUMBER_OF_PARTICLES: "Controls the number of particles in the canvas.",
@@ -64,12 +77,12 @@ const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
         </div>
       </div>
       <div className="arrow-always-visible-right-container">
-        {!isOpen && isHomePage && (
-          <div className="info-hover ">
+        {!isOpen && isHomePage && isHovering && (
+          <div className="info-hover">
             display controls to play with particles mesh algorithm parameters
           </div>
-        )}{" "}
-        {!isHomePage && (
+        )}
+        {!isHomePage && isHovering && (
           <div className="info-hover movThatMore">
             Navigate to the home page to move somwhere else and play with cool
             mesh
@@ -77,6 +90,8 @@ const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
         )}
         <div
           className={`toggle-arrow ${isOpen ? "open" : "closed"}`}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
           onClick={
             isHomePage
               ? toggleDrawer
