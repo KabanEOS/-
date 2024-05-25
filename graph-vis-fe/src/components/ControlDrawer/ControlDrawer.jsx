@@ -20,23 +20,21 @@ const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
 
   const descriptions = {
     NUMBER_OF_PARTICLES: "Controls the number of particles in the canvas.",
-    PARTICLE_COLOR: "Sets the color of the particles.",
-    NODE_PARTICLE_COLOR: "Sets the color of the node particles.",
+    MOUSE_EFFECT: "Adjusts how particles react to the mouse.",
+    SNAP_DISTANCE: "Distance at which particles snap to the mouse.",
     PARTICLE_SIZE_MIN: "Sets the minimum size of particles.",
     PARTICLE_SIZE_MAX: "Sets the maximum size of particles.",
     NODE_PARTICLE_SIZE_MIN: "Sets the minimum size of node particles.",
-    NODE_PARTICLE_SIZE_MAX: "Sets the maximum size of node particles.",
-    PARTICLE_SPEED_MIN: "Sets the minimum speed of particles.",
-    PARTICLE_SPEED_MAX: "Sets the maximum speed of particles.",
     CONNECTION_DISTANCE:
       "Determines the distance within which particles connect.",
     MIN_SPEED: "Sets the minimum speed of particles.",
     MAX_SPEED: "Sets the maximum speed of particles.",
     SELF_MOVEMENT: "Controls the self-movement factor of particles.",
-    SNAP_DISTANCE: "Distance at which particles snap to the mouse.",
     SLOW_DOWN_FACTOR: "Factor by which particles slow down.",
     ATTRACTION_FACTOR: "Factor controlling the attraction to the mouse.",
-    MOUSE_EFFECT: "Adjusts how particles react to the mouse.",
+    NODE_PARTICLE_SIZE_MAX: "Sets the maximum size of node particles.",
+    PARTICLE_SPEED_MIN: "Sets the minimum speed of particles.",
+    PARTICLE_SPEED_MAX: "Sets the maximum speed of particles.",
   };
 
   const controlsArray = Object.keys(controls).map((key) => ({
@@ -62,6 +60,7 @@ const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
               onChange={onChange}
             />
           ))}
+          <div style={{ height: "50px" }}></div>
         </div>
       </div>
       <div className="arrow-always-visible-right-container">

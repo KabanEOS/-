@@ -11,23 +11,26 @@ const SpinningGraph = ({ nodes }) => {
   const centerY = window.innerHeight / 2.7;
 
   const defaultControls = {
+    MOUSE_EFFECT: 2,
+    CONNECTION_DISTANCE: (window.innerWidth / 7) * (window.innerHeight / 7),
     NUMBER_OF_PARTICLES: 380,
-    PARTICLE_COLOR: "#ffffff",
-    NODE_PARTICLE_COLOR: "#ff0000",
+    SELF_MOVEMENT: 0.01,
+    SNAP_DISTANCE: 100,
     PARTICLE_SIZE_MIN: 2,
     PARTICLE_SIZE_MAX: 5,
     NODE_PARTICLE_SIZE_MIN: 40,
     NODE_PARTICLE_SIZE_MAX: 60,
     PARTICLE_SPEED_MIN: -0.2,
     PARTICLE_SPEED_MAX: 0.2,
-    CONNECTION_DISTANCE: (window.innerWidth / 7) * (window.innerHeight / 7),
+
     MIN_SPEED: -0.2,
     MAX_SPEED: 0.4,
-    SELF_MOVEMENT: 0.01,
-    SNAP_DISTANCE: 100,
+
     SLOW_DOWN_FACTOR: 0.98,
     ATTRACTION_FACTOR: 0.01,
-    MOUSE_EFFECT: 2,
+
+    PARTICLE_COLOR: "#ffffff",
+    NODE_PARTICLE_COLOR: "#ff0000",
   };
 
   const [controls, setControls] = useState(() => {
