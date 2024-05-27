@@ -1,0 +1,14 @@
+// styles/graph.styles.scss
+.graph {
+  width: 100%;
+  height: 100%;
+
+  .edge {
+    stroke: white;
+  }
+
+  .node {
+    fill: rgb(179, 73, 211);
+    r: 1vw;
+  }
+}
