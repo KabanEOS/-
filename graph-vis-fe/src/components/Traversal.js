@@ -1,8 +1,10 @@
+// Reingold-Tilford Algorithm
+
 import React, { useState, useEffect, useRef } from "react";
 import {
   getBfsTraversal,
   getDfsTraversal,
-  generateRandomGraph,
+  generateRandomTreeGraphForTraversal,
 } from "../services/api";
 import Graph from "./Graph";
 
@@ -43,13 +45,13 @@ const Traversal = () => {
 
   const fetchRandomGraph = async () => {
     try {
-      const graph = await generateRandomGraph(numNodes);
+      const graph = await generateRandomTreeGraphForTraversal(numNodes);
       // @ts-ignore
       const viewportWidth = graphRef.current.clientWidth;
       // @ts-ignore
       const viewportHeight = graphRef.current.clientHeight;
       const nodeSize = Math.max(10, Math.min(30, 1000 / numNodes));
-      const nodesWithPositions = calculateNodePositions(
+      const nodesWithPositions = calculateNodePositionsForTraversalGraph(
         graph.nodes,
         graph.edges,
         viewportWidth,
@@ -66,7 +68,7 @@ const Traversal = () => {
     }
   };
 
-  const calculateNodePositions = (
+  const calculateNodePositionsForTraversalGraph = (
     nodes,
     edges,
     viewportWidth,
