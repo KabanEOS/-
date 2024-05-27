@@ -37,8 +37,11 @@ const LearnGraphs = () => {
     const containerWidth = svgWidth;
     const containerHeight = svgHeight;
 
-    const translateX = (containerWidth - graphWidth) / 2 - minX;
-    const translateY = (containerHeight - graphHeight) / 2 - minY;
+    const initialScale = (containerHeight * 0.8) / graphHeight;
+    const adjustedGraphHeight = graphHeight * initialScale;
+    const translateY = containerHeight * 0.1 - minY * initialScale;
+    const translateX =
+      (containerWidth - graphWidth * initialScale) / 2 - minX * initialScale;
 
     console.log("Centering Graph");
     console.log("Graph center calculated: ", {
@@ -47,7 +50,7 @@ const LearnGraphs = () => {
     });
 
     setTransform({
-      scale: 1,
+      scale: initialScale,
       translateX,
       translateY,
     });
