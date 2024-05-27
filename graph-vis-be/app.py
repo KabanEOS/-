@@ -7,7 +7,7 @@ from graph_algorithms import (
     generate_random_tree_graph
 )
 from learn_graph import (
-    generate_random_graph
+    generate_random_build_graph
 )
 from models import GraphDTO
 
@@ -62,9 +62,9 @@ def generate_random_graph_endpoint():
         additional_params = data.get("additional_params", {})
         print(f"Received request to generate graph with {num_nodes} nodes, {
               num_edges} edges, and {connectivity} connectivity")
-        graph = generate_random_graph(
+        graph = generate_random_build_graph(
             num_nodes, num_edges, connectivity, **additional_params)
-        print(f"Generated graph: {graph}")
+        # print(f"Generated graph: {graph}")
         return jsonify(graph.dict())
     except Exception as e:
         print(f"Error in generate_random_graph: {e}")

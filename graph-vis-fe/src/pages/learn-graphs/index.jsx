@@ -8,17 +8,55 @@ import "../../styles/learnGraph.styles.scss";
 const LearnGraphs = () => {
   const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
   const [error, setError] = useState(null);
-  const [numNodes, setNumNodes] = useState(Math.floor(Math.random() * 21) + 10); // 10 to 30 nodes
-  const [numEdges, setNumEdges] = useState(Math.floor(Math.random() * 21) + 10); // 10 to 30 edges
+  const [numNodes, setNumNodes] = useState(Math.floor(Math.random() * 91) + 10); // 10 to 100 nodes
+  const [numEdges, setNumEdges] = useState(Math.floor(Math.random() * 91) + 10); // 10 to 100 edges
   const [maxIterations, setMaxIterations] = useState(1000);
   const [optimalDistance, setOptimalDistance] = useState(100);
-  const [containerWidth, setContainerWidth] = useState(70);
-  const [containerHeight, setContainerHeight] = useState(70);
+  const [nodeSize, setNodeSize] = useState(2); // Small size for large graphs
+  const [connectivity, setConnectivity] = useState("random"); // Connectivity type
+  const [svgWidth, setSvgWidth] = useState(3000); // Default width
+  const [svgHeight, setSvgHeight] = useState(3000); // Default height
 
   const graphRef = useRef(null);
 
-  const fetchRandomBuildGraph = async () => {
-    const connectivity = "random";
+  const [transform, setTransform] = useState({
+    scale: 1,
+    translateX: 0,
+    translateY: 0,
+  });
+
+  const centerGraph = (nodes) => {
+    const minX = Math.min(...nodes.map((node) => node.x));
+    const minY = Math.min(...nodes.map((node) => node.y));
+    const maxX = Math.max(...nodes.map((node) => node.x));
+    const maxY = Math.max(...nodes.map((node) => node.y));
+
+    const graphWidth = maxX - minX;
+    const graphHeight = maxY - minY;
+
+    const containerWidth = svgWidth;
+    const containerHeight = svgHeight;
+
+    const translateX = (containerWidth - graphWidth) / 2 - minX;
+    const translateY = (containerHeight - graphHeight) / 2 - minY;
+
+    console.log("Centering Graph");
+    console.log("Graph center calculated: ", {
+      centerX: (minX + maxX) / 2,
+      centerY: (minY + maxY) / 2,
+    });
+
+    setTransform({
+      scale: 1,
+      translateX,
+      translateY,
+    });
+  };
+
+  const fetchAndGenerateGraph = async () => {
+    // Get container dimensions from the center coordinates
+    const containerWidth = svgWidth;
+    const containerHeight = svgHeight;
 
     try {
       const data = await generateRandomBuildGraph(
@@ -27,23 +65,27 @@ const LearnGraphs = () => {
         connectivity
       );
       console.log("🚀 ~ fetchRandomBuildGraph ~ data:", data);
-      if (graphRef.current) {
-        const viewportWidth =
-          (graphRef.current.clientWidth * containerWidth) / 100;
-        const viewportHeight =
-          (graphRef.current.clientHeight * containerHeight) / 100;
-        const nodeSize = Math.max(10, Math.min(30, 1000 / numNodes));
-        const nodesWithPositions = calculateNodePositions(
-          data.nodes,
-          data.edges,
-          viewportWidth,
-          viewportHeight,
-          nodeSize,
-          maxIterations,
-          optimalDistance
+
+      // Calculate node positions
+      const nodesWithPositions = calculateNodePositions(
+        data.nodes,
+        data.edges,
+        containerWidth * 3, // Use a larger virtual area
+        containerHeight * 3, // Use a larger virtual area
+        nodeSize,
+        maxIterations,
+        optimalDistance
+      );
+
+      if (nodesWithPositions === null) {
+        setError(
+          "You need to decrease the number of nodes or adjust the initial position parameters to show all the nodes."
         );
-        console.log("🚀 ~ nodesWithPositions:", nodesWithPositions);
+        setGraphData({ nodes: [], edges: [] });
+      } else {
+        setError(null);
         setGraphData({ nodes: nodesWithPositions, edges: data.edges });
+        centerGraph(nodesWithPositions);
       }
     } catch (err) {
       console.error("🚀 ~ fetchRandomBuildGraph ~ error:", err);
@@ -52,15 +94,50 @@ const LearnGraphs = () => {
   };
 
   useEffect(() => {
-    fetchRandomBuildGraph();
+    fetchAndGenerateGraph();
   }, [
     numNodes,
     numEdges,
     maxIterations,
     optimalDistance,
-    containerWidth,
-    containerHeight,
+    nodeSize,
+    connectivity,
+    svgWidth,
+    svgHeight,
   ]);
+
+  const handleWheel = (event) => {
+    event.preventDefault();
+    const { deltaY } = event;
+    const scaleAmount = -deltaY * 0.01;
+    const newScale = Math.min(Math.max(transform.scale + scaleAmount, 0.1), 10);
+
+    // Adjust translation to zoom towards the yellow dot (graph center)
+    const centerX = svgWidth / 2;
+    const centerY = svgHeight / 2;
+
+    const newTranslateX =
+      centerX - ((centerX - transform.translateX) * newScale) / transform.scale;
+    const newTranslateY =
+      centerY - ((centerY - transform.translateY) * newScale) / transform.scale;
+
+    console.log("Zooming Graph");
+    console.log("New center after zoom: ", {
+      centerX: newTranslateX + centerX,
+      centerY: newTranslateY + centerY,
+    });
+
+    setTransform({
+      scale: newScale,
+      translateX: newTranslateX,
+      translateY: newTranslateY,
+    });
+  };
+
+  const handleDimensionsCalculated = ({ svgCenterX, svgCenterY }) => {
+    setSvgWidth(svgCenterX * 2);
+    setSvgHeight(svgCenterY * 2);
+  };
 
   return (
     <div className="show-over-shadow">
@@ -77,7 +154,7 @@ const LearnGraphs = () => {
             value={numNodes}
             onChange={(e) => setNumNodes(Number(e.target.value))}
             min="10"
-            max="30"
+            max="100"
           />
         </label>
         <label>
@@ -87,7 +164,7 @@ const LearnGraphs = () => {
             value={numEdges}
             onChange={(e) => setNumEdges(Number(e.target.value))}
             min="10"
-            max="30"
+            max="100"
           />
         </label>
         <label>
@@ -111,26 +188,27 @@ const LearnGraphs = () => {
           />
         </label>
         <label>
-          Container Width (%):
+          Node Size:
           <input
             type="number"
-            value={containerWidth}
-            onChange={(e) => setContainerWidth(Number(e.target.value))}
-            min="10"
-            max="100"
+            value={nodeSize}
+            onChange={(e) => setNodeSize(Number(e.target.value))}
+            min="2"
+            max="20"
           />
         </label>
         <label>
-          Container Height (%):
-          <input
-            type="number"
-            value={containerHeight}
-            onChange={(e) => setContainerHeight(Number(e.target.value))}
-            min="10"
-            max="100"
-          />
+          Connectivity:
+          <select
+            value={connectivity}
+            onChange={(e) => setConnectivity(e.target.value)}
+          >
+            <option value="random">Random</option>
+            <option value="tree">Tree</option>
+            <option value="complete">Complete</option>
+          </select>
         </label>
-        <button onClick={fetchRandomBuildGraph}>Generate External Graph</button>
+        <button onClick={fetchAndGenerateGraph}>Generate External Graph</button>
       </div>
       {error && <p style={{ color: "red" }}>{error}</p>}
       <div
@@ -141,17 +219,27 @@ const LearnGraphs = () => {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          overflow: "hidden",
         }}
       >
         <div
+          onWheel={handleWheel}
           style={{
-            width: `${containerWidth}%`,
-            height: `${containerHeight}%`,
+            width: "100%",
+            height: "100%",
             border: "1px solid black",
             position: "relative",
+            overflow: "hidden",
           }}
         >
-          <BuildGraph nodes={graphData.nodes} edges={graphData.edges} />
+          <BuildGraph
+            nodes={graphData.nodes}
+            edges={graphData.edges}
+            transform={transform}
+            nodeSize={nodeSize}
+            svgWidth={svgWidth}
+            svgHeight={svgHeight}
+          />
         </div>
       </div>
     </div>

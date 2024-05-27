@@ -10,19 +10,19 @@ export const calculateNodePositions = (
   const positions = {};
   const width = containerWidth;
   const height = containerHeight;
-  const centerX = width / 2;
-  const centerY = height / 2;
   const area = width * height;
   const k = optimalDistance || Math.sqrt(area / nodes.length);
   let temperature = width / 10;
 
-  // Initialize positions randomly within the viewport
+  // Initialize positions in the center of the container to avoid initial spread
   nodes.forEach((node) => {
     positions[node.id] = {
-      x: centerX + (Math.random() - 0.5) * width * 0.5,
-      y: centerY + (Math.random() - 0.5) * height * 0.5,
+      x: (Math.random() * 0.8 + 0.1) * width,
+      y: (Math.random() * 0.8 + 0.1) * height,
     };
   });
+
+  console.log("Initial positions:", positions);
 
   // Function to calculate repulsive force
   const repulsiveForce = (distance) => k ** 2 / distance;
@@ -90,6 +90,10 @@ export const calculateNodePositions = (
   // Main loop to apply forces and update positions iteratively
   for (let i = 0; i < maxIterations; i++) {
     applyForces();
+    // Visualize or log intermediate states
+    if (i % 100 === 0) {
+      console.log(`Iteration ${i}`, positions);
+    }
   }
 
   // Ensure nodes are within the viewport boundaries
@@ -110,17 +114,54 @@ export const calculateNodePositions = (
   const minY = Math.min(...nodes.map((node) => positions[node.id].y));
   const maxY = Math.max(...nodes.map((node) => positions[node.id].y));
 
-  const offsetX = centerX - (minX + maxX) / 2;
-  const offsetY = centerY - (minY + maxY) / 2;
+  const offsetX = (width - (maxX - minX)) / 2 - minX;
+  const offsetY = (height - (maxY - minY)) / 2 - minY;
 
   nodes.forEach((node) => {
     positions[node.id].x += offsetX;
     positions[node.id].y += offsetY;
   });
 
+  console.log("Final positions:", positions);
+
+  // Check connectivity
+  const isConnected = checkGraphConnectivity(nodes, edges);
+  console.log("Graph connectivity check:", { isConnected });
+
   // Assign final positions to nodes
   return nodes.map((node) => ({
     ...node,
     ...positions[node.id],
   }));
+};
+
+// Helper function to check graph connectivity
+const checkGraphConnectivity = (nodes, edges) => {
+  const adjList = new Map();
+  nodes.forEach((node) => {
+    adjList.set(node.id, []);
+  });
+  edges.forEach((edge) => {
+    adjList.get(edge.source).push(edge.target);
+    adjList.get(edge.target).push(edge.source);
+  });
+
+  const visited = new Set();
+  const stack = [nodes[0].id];
+
+  while (stack.length > 0) {
+    const node = stack.pop();
+    if (!visited.has(node)) {
+      visited.add(node);
+      adjList.get(node).forEach((neighbor) => {
+        if (!visited.has(neighbor)) {
+          stack.push(neighbor);
+        }
+      });
+    }
+  }
+
+  const isConnected = visited.size === nodes.length;
+  console.log("Graph connectivity check:", { isConnected });
+  return isConnected;
 };
