@@ -2,7 +2,7 @@ import React from "react";
 import PropTypes from "prop-types";
 import "./../../styles/controlDrawer.styles.scss";
 
-const ControlInput = ({ label, value, onChange }) => {
+const ControlInput = ({ label, value, onChange, buttonChangeValue }) => {
   const handleInputChange = (e) => {
     onChange(parseFloat(e.target.value));
   };
@@ -19,9 +19,13 @@ const ControlInput = ({ label, value, onChange }) => {
     <div className="control-input">
       <label>{label}</label>
       <div className="control-buttons">
-        <button onClick={() => handleButtonClick(-1)}>-</button>
+        <button onClick={() => handleButtonClick(-buttonChangeValue)}>
+          -{buttonChangeValue}
+        </button>
         <input type="number" value={value} onChange={handleInputChange} />
-        <button onClick={() => handleButtonClick(1)}>+</button>
+        <button onClick={() => handleButtonClick(buttonChangeValue)}>
+          +{buttonChangeValue}
+        </button>
       </div>
       <input
         type="range"

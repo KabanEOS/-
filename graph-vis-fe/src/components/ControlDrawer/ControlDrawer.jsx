@@ -5,6 +5,7 @@ import ControlDrawerUnit from "./ControlDrawerUnit.jsx";
 import { useLocation } from "react-router-dom";
 
 const ControlDrawer = ({ controls, minMaxValues, onChange, descriptions }) => {
+  console.log("🚀 ~ ControlDrawer ~ minMaxValues:", minMaxValues);
   const [isOpen, setIsOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
 
@@ -27,16 +28,13 @@ const ControlDrawer = ({ controls, minMaxValues, onChange, descriptions }) => {
     setIsHovering(false);
   };
 
-  console.log("🚀 ~ ControlDrawer ~ isHovering:", isHovering);
-  console.log("🚀 ~ ControlDrawer ~ isOpen:", isOpen);
-  console.log("🚀 ~ ControlDrawer ~ isHomePage:", isHomePage);
-
   const controlsArray = Object.keys(controls).map((key) => ({
     name: key,
     value: controls[key],
     min: minMaxValues[key]?.min || 0,
     max: minMaxValues[key]?.max || 100,
     description: descriptions[key] || "",
+    buttonChangeValue: minMaxValues[key]?.buttonChangeValue || 1,
   }));
 
   return (
@@ -52,6 +50,7 @@ const ControlDrawer = ({ controls, minMaxValues, onChange, descriptions }) => {
               max={control.max}
               description={control.description}
               onChange={onChange}
+              buttonChangeValue={control.buttonChangeValue}
             />
           ))}
           <div style={{ height: "50px" }}></div>

@@ -22,13 +22,10 @@ const SpinningGraph = ({ nodes }) => {
     NODE_PARTICLE_SIZE_MAX: 60,
     PARTICLE_SPEED_MIN: -0.2,
     PARTICLE_SPEED_MAX: 0.2,
-
     MIN_SPEED: -0.2,
     MAX_SPEED: 0.4,
-
     SLOW_DOWN_FACTOR: 0.98,
     ATTRACTION_FACTOR: 0.01,
-
     PARTICLE_COLOR: "#ffffff",
     NODE_PARTICLE_COLOR: "#ff0000",
   };
@@ -39,25 +36,31 @@ const SpinningGraph = ({ nodes }) => {
   });
 
   useEffect(() => {
+    if (!localStorage.getItem("particleControls")) {
+      localStorage.setItem("particleControls", JSON.stringify(defaultControls));
+    }
+  }, []);
+
+  useEffect(() => {
     localStorage.setItem("particleControls", JSON.stringify(controls));
   }, [controls]);
 
   const minMaxValues = {
-    NUMBER_OF_PARTICLES: { min: 100, max: 1000 },
-    PARTICLE_SIZE_MIN: { min: 1, max: 10 },
-    PARTICLE_SIZE_MAX: { min: 1, max: 10 },
-    NODE_PARTICLE_SIZE_MIN: { min: 20, max: 60 },
-    NODE_PARTICLE_SIZE_MAX: { min: 60, max: 100 },
-    PARTICLE_SPEED_MIN: { min: -2, max: 0 },
-    PARTICLE_SPEED_MAX: { min: 0, max: 2 },
-    CONNECTION_DISTANCE: { min: 50, max: 500 },
-    MIN_SPEED: { min: -2, max: 0 },
-    MAX_SPEED: { min: 0, max: 2 },
-    SELF_MOVEMENT: { min: 0, max: 0.1 },
-    SNAP_DISTANCE: { min: 50, max: 300 },
-    SLOW_DOWN_FACTOR: { min: 0.5, max: 1 },
-    ATTRACTION_FACTOR: { min: 0.01, max: 0.1 },
-    MOUSE_EFFECT: { min: -10, max: 10 },
+    NUMBER_OF_PARTICLES: { min: 100, max: 1000, buttonChangeValue: 50 },
+    PARTICLE_SIZE_MIN: { min: 1, max: 10, buttonChangeValue: 5 },
+    PARTICLE_SIZE_MAX: { min: 1, max: 10, buttonChangeValue: 5 },
+    NODE_PARTICLE_SIZE_MIN: { min: 20, max: 60, buttonChangeValue: 20 },
+    NODE_PARTICLE_SIZE_MAX: { min: 60, max: 100, buttonChangeValue: 20 },
+    PARTICLE_SPEED_MIN: { min: -5, max: 5, buttonChangeValue: 0.5 },
+    PARTICLE_SPEED_MAX: { min: -5, max: 5, buttonChangeValue: 0.5 },
+    CONNECTION_DISTANCE: { min: 50, max: 500, buttonChangeValue: 10 },
+    MIN_SPEED: { min: -2, max: 0, buttonChangeValue: 0.1 },
+    MAX_SPEED: { min: 0, max: 2, buttonChangeValue: 0.1 },
+    SELF_MOVEMENT: { min: 0, max: 0.1, buttonChangeValue: 0.01 },
+    SNAP_DISTANCE: { min: 50, max: 300, buttonChangeValue: 1 },
+    SLOW_DOWN_FACTOR: { min: -1, max: 1, buttonChangeValue: 0.01 },
+    ATTRACTION_FACTOR: { min: -1, max: 1, buttonChangeValue: 0.01 },
+    MOUSE_EFFECT: { min: -10, max: 10, buttonChangeValue: 0.1 },
   };
 
   const descriptions = {
