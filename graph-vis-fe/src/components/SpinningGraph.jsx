@@ -60,6 +60,25 @@ const SpinningGraph = ({ nodes }) => {
     MOUSE_EFFECT: { min: -10, max: 10 },
   };
 
+  const descriptions = {
+    NUMBER_OF_PARTICLES: "Controls the number of particles in the canvas.",
+    MOUSE_EFFECT: "Adjusts how particles react to the mouse.",
+    SNAP_DISTANCE: "Distance at which particles snap to the mouse.",
+    PARTICLE_SIZE_MIN: "Sets the minimum size of particles.",
+    PARTICLE_SIZE_MAX: "Sets the maximum size of particles.",
+    NODE_PARTICLE_SIZE_MIN: "Sets the minimum size of node particles.",
+    CONNECTION_DISTANCE:
+      "Determines the distance within which particles connect.",
+    MIN_SPEED: "Sets the minimum speed of particles.",
+    MAX_SPEED: "Sets the maximum speed of particles.",
+    SELF_MOVEMENT: "Controls the self-movement factor of particles.",
+    SLOW_DOWN_FACTOR: "Factor by which particles slow down.",
+    ATTRACTION_FACTOR: "Factor controlling the attraction to the mouse.",
+    NODE_PARTICLE_SIZE_MAX: "Sets the maximum size of node particles.",
+    PARTICLE_SPEED_MIN: "Sets the minimum speed of particles.",
+    PARTICLE_SPEED_MAX: "Sets the maximum speed of particles.",
+  };
+
   const updateControl = (name, value) => {
     setControls((prev) => ({ ...prev, [name]: value }));
   };
@@ -81,6 +100,7 @@ const SpinningGraph = ({ nodes }) => {
         controls={controls}
         minMaxValues={minMaxValues}
         onChange={updateControl}
+        descriptions={descriptions}
       />
       <Particles positions={positions} controls={controls} />
     </div>

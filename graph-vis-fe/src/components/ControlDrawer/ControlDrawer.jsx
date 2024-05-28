@@ -4,7 +4,7 @@ import "./../../styles/controlDrawer.styles.scss";
 import ControlDrawerUnit from "./ControlDrawerUnit.jsx";
 import { useLocation } from "react-router-dom";
 
-const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
+const ControlDrawer = ({ controls, minMaxValues, onChange, descriptions }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
 
@@ -30,25 +30,6 @@ const ControlDrawer = ({ controls, minMaxValues, onChange }) => {
   console.log("🚀 ~ ControlDrawer ~ isHovering:", isHovering);
   console.log("🚀 ~ ControlDrawer ~ isOpen:", isOpen);
   console.log("🚀 ~ ControlDrawer ~ isHomePage:", isHomePage);
-
-  const descriptions = {
-    NUMBER_OF_PARTICLES: "Controls the number of particles in the canvas.",
-    MOUSE_EFFECT: "Adjusts how particles react to the mouse.",
-    SNAP_DISTANCE: "Distance at which particles snap to the mouse.",
-    PARTICLE_SIZE_MIN: "Sets the minimum size of particles.",
-    PARTICLE_SIZE_MAX: "Sets the maximum size of particles.",
-    NODE_PARTICLE_SIZE_MIN: "Sets the minimum size of node particles.",
-    CONNECTION_DISTANCE:
-      "Determines the distance within which particles connect.",
-    MIN_SPEED: "Sets the minimum speed of particles.",
-    MAX_SPEED: "Sets the maximum speed of particles.",
-    SELF_MOVEMENT: "Controls the self-movement factor of particles.",
-    SLOW_DOWN_FACTOR: "Factor by which particles slow down.",
-    ATTRACTION_FACTOR: "Factor controlling the attraction to the mouse.",
-    NODE_PARTICLE_SIZE_MAX: "Sets the maximum size of node particles.",
-    PARTICLE_SPEED_MIN: "Sets the minimum speed of particles.",
-    PARTICLE_SPEED_MAX: "Sets the maximum speed of particles.",
-  };
 
   const controlsArray = Object.keys(controls).map((key) => ({
     name: key,
