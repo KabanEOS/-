@@ -11,6 +11,7 @@ import TraversalDemo from "./pages/traversal-demo/index";
 import SpinningGraph from "./components/SpinningGraph";
 import { NodePositionsProvider } from "./contexts/NodePositionsContext.jsx";
 import Shadow from "./components/Shadow.jsx";
+import Signature from "./components/Signature.jsx";
 
 const App = () => {
   const nodes = [
@@ -29,6 +30,7 @@ const App = () => {
   return (
     <NodePositionsProvider>
       <div className="App">
+        <Signature isHomePage={isHomePage} />
         <Shadow isVisible={!isHomePage} />
         <SpinningGraph nodes={nodes} />
         <Routes>

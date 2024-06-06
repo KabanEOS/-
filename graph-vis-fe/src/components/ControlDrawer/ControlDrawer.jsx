@@ -3,9 +3,9 @@ import { RiArrowRightWideFill, RiHomeFill } from "react-icons/ri";
 import "./../../styles/controlDrawer.styles.scss";
 import ControlDrawerUnit from "./ControlDrawerUnit.jsx";
 import { useLocation } from "react-router-dom";
+import HoverCircleIcon from "../HoverCircleIcon.jsx";
 
 const ControlDrawer = ({ controls, minMaxValues, onChange, descriptions }) => {
-  console.log("🚀 ~ ControlDrawer ~ minMaxValues:", minMaxValues);
   const [isOpen, setIsOpen] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
 
@@ -56,38 +56,28 @@ const ControlDrawer = ({ controls, minMaxValues, onChange, descriptions }) => {
           <div style={{ height: "50px" }}></div>
         </div>
       </div>
-      <div className="arrow-always-visible-right-container">
-        {!isOpen && isHomePage && isHovering && (
-          <div className="info-hover">
-            display controls to play with particles mesh algorithm parameters
-          </div>
-        )}
-        {!isHomePage && isHovering && (
-          <div className="info-hover movThatMore">
-            Navigate to the home page to move somwhere else and play with cool
-            mesh
-          </div>
-        )}
-        <div
-          className={`toggle-arrow ${isOpen ? "open" : "closed"}`}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
-          onClick={
-            isHomePage
-              ? toggleDrawer
-              : () => {
-                  window.location.href = "/";
-                }
-          }
-        >
-          {isHomePage ? (
-            <RiArrowRightWideFill />
-          ) : (
-            <RiHomeFill className={`${!isHomePage && "squeezeNMoveThat"}`} />
-          )}
-          <div className="background-circle" />
-        </div>
-      </div>
+      <HoverCircleIcon
+        icon={isHomePage ? RiArrowRightWideFill : RiHomeFill}
+        hoverText={
+          isHomePage
+            ? "Display controls to play with particles mesh algorithm parameters"
+            : "Navigate to the home page to move somewhere else and play with cool mesh"
+        }
+        onClick={
+          isHomePage
+            ? toggleDrawer
+            : () => {
+                window.location.href = "/";
+              }
+        }
+        showSecondCircle={true}
+        isOpen={isOpen}
+        isHomePage={isHomePage}
+        isHovering={isHovering}
+        handleMouseEnter={handleMouseEnter}
+        handleMouseLeave={handleMouseLeave}
+        toggleDrawer={toggleDrawer}
+      />
     </div>
   );
 };

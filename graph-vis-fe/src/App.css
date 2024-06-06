@@ -1,6 +1,6 @@
 .App {
   margin: 0 !important;
-  text-align: center;
+  text-align: left;
   font-family: Helvetica, Arial, sans-serif;
   color: white;
   width: 100%;
@@ -9,8 +9,10 @@
   overflow-y: hidden;
 }
 
+
 body,html {
   margin: 0;
   text-align: center;
   background-color: #282c34;
+  overflow: hidden; /* Prevents overflow cut off */
   } 

@@ -1,94 +1,76 @@
-// hoverCircleIcon.styles.scss
 .arrow-always-visible-right-container {
   height: 100vh;
   width: 50px;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end; /* Align items to the end (right) */
   align-items: center;
-  position: absolute;
-  right: -30px;
+  position: absolute; /* Absolute positioning */
+  top: 50%; /* Center vertically */
+  transform: translateY(-50%); /* Adjust for proper centering */
+  z-index: 1 !important;
 
   .toggle-arrow {
     width: fit-content;
     height: fit-content;
     cursor: pointer;
-    transition:
-      transform 0.3s,
-      color 0.3s; /* Ensure smooth transitions */
-
-    &:hover {
-      transform: scale(3.75) translateX(8%);
-      color: #ff6347;
-
-      .info-hover {
-        display: block;
-        opacity: 1;
-        animation: fadeIn 0.3s ease-in-out forwards;
-      }
-
-      /* Define the fadeIn animation */
-      @keyframes fadeIn {
-        0% {
-          opacity: 0;
-          transform: translateX(-10%);
-        }
-        100% {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-    }
+    position: relative;
   }
+}
 
-  .background-circle {
-    background-color: #fff;
-    border-radius: 50%;
-    width: 70px;
-    height: 70px;
-    position: absolute;
-    margin-top: -46px;
-    right: 0;
-    z-index: -1;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-    transition:
-      opacity 0.3s ease-in-out,
-      transform 0.3s ease-in-out 0.3s;
-    opacity: 1;
-    transform: translateX(0);
+.background-circle {
+  // circle styling
+  background-color: #ffffff85; /* Different color for distinction */
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.31);
+  border-radius: 50%;
+
+  // size
+  width: 140px; /* Size of the first circle */
+  height: 140px; /* Size of the first circle */
+
+  //initial position
+  position: absolute;
+  transform: translateY(-50%);
+  transform: translateX(15%);
+  z-index: 20;
+
+  &:hover {
   }
+}
 
-  .info-hover {
-    color: #ffffffcc;
-    background-image: radial-gradient(
-      circle,
-      #0000003e,
-      #0000003e 1%,
-      #0000003e 90%
-    );
-    width: 200px;
-    font-size: 25px;
-    margin-left: 300px;
-    text-align: left;
-    position: absolute;
-    z-index: -1;
-    box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
-    font-family: "Courier New", Courier, monospace;
-    opacity: 0;
-    transform: translateX(-10%);
-    transition:
-      opacity 0.3s ease-in-out,
-      transform 0.3s ease-in-out;
-    animation: fadeOut 0.5s ease-in-out forwards;
+.first-icon {
+  width: 45px;
+  height: 45px;
+  position: absolute;
+  transform: translateY(-50%); /* Align vertically */
+  transform: translateX(70%); /* Align vertically */
+  color: #ff000091;
+  z-index: 21; /* On top */
+}
 
-    @keyframes fadeOut {
-      0% {
-        opacity: 1;
-        transform: translateX(0);
-      }
-      100% {
-        opacity: 0;
-        transform: translateX(-10%);
-      }
-    }
-  }
+.second-icon {
+  //initial position, size, color
+  width: 25px;
+  height: 25px;
+  position: absolute;
+  transform: translateY(-50%); /* Align vertically */
+  transform: translateX(50px); /* Align vertically */
+  color: #ff000071;
+  z-index: 21; /* On top */
+}
+
+.second-background-circle {
+  // circle styling
+  background-color: #ffffff75; /* Different color for distinction */
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.31);
+  border-radius: 50%;
+
+  // size
+  width: 265px; /* Size of the first circle */
+  height: 265px; /* Size of the first circle */
+
+  //initial position
+  position: absolute; /* Absolute positioning */
+  transform: translateY(-50%); /* Align vertically */
+  transform: translateX(20%); /* Align vertically */
+  z-index: 19; /* On top */
 }

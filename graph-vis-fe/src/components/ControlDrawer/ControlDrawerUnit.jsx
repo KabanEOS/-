@@ -77,6 +77,7 @@ const ControlDrawerUnit = ({
         min={min}
         max={max}
         onChange={handleSliderChange}
+        // @ts-ignore
         style={{ "--thumb-color": thumbColor }}
       />
       <div className="unit-description">{description}</div>
