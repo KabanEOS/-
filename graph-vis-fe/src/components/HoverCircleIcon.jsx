@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import PropTypes from "prop-types";
 import { RiArrowRightWideFill, RiHomeFill } from "react-icons/ri";
 import "./../styles/navButton.styles.scss";
@@ -16,6 +16,16 @@ const HoverCircleIcon = ({
   handleMouseLeave,
   toggleDrawer,
 }) => {
+  const [hovered, setHovered] = useState(null);
+
+  const handleMouseEnterInternal = (element) => {
+    setHovered(element);
+  };
+
+  const handleMouseLeaveInternal = () => {
+    setHovered(null);
+  };
+
   return (
     <div className="arrow-always-visible-right-container">
       <div
@@ -29,18 +39,41 @@ const HoverCircleIcon = ({
           <>
             <div
               onClick={onClick}
-              className={`background-circle 
-              ${isOpen ? "open" : "closed"}`}
+              onMouseEnter={() => handleMouseEnterInternal("firstCircle")}
+              onMouseLeave={handleMouseLeaveInternal}
+              className={`background-circle ${isOpen ? "open" : "closed"} ${
+                hovered === "firstCircle" ? "hovered-first" : ""
+              }`}
             >
               {/* <Icon2 /> */}
             </div>
-            <RiHomeFill className="second-icon" />
+            <RiHomeFill
+              className={`second-icon ${
+                hovered === "secondCircle" ? "hovered-second" : ""
+              }`}
+              onMouseEnter={() => handleMouseEnterInternal("secondCircle")}
+              onMouseLeave={handleMouseLeaveInternal}
+            />
           </>
         )}
         <div
-          className={`second-background-circle ${isOpen ? "open" : "closed"}`}
+          className={`second-background-circle ${isOpen ? "open" : "closed"} ${
+            hovered === "secondCircle" ? "hovered-second" : ""
+          }`}
+          onMouseEnter={() => handleMouseEnterInternal("secondCircle")}
+          onMouseLeave={handleMouseLeaveInternal}
         ></div>
-        <RiArrowRightWideFill className="first-icon" />
+        <div
+          className={`first-icon-container ${
+            hovered === "firstCircle" ? "hovered-first" : ""
+          }`}
+        >
+          <RiArrowRightWideFill
+            className={`first-icon ${hovered === "firstCircle" ? "hovered-first" : ""}`}
+            onMouseEnter={() => handleMouseEnterInternal("firstCircle")}
+            onMouseLeave={handleMouseLeaveInternal}
+          />
+        </div>
       </>
     </div>
   );
