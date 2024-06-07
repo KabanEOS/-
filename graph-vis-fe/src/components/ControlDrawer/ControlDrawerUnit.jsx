@@ -20,11 +20,17 @@ const ControlDrawerUnit = ({
   };
 
   const handleInputChange = (e) => {
-    onChange(name, parseFloat(e.target.value));
+    const newValue = parseFloat(e.target.value);
+    if (!isNaN(newValue)) {
+      onChange(name, newValue);
+    }
   };
 
   const handleSliderChange = (e) => {
-    onChange(name, parseFloat(e.target.value));
+    const newValue = parseFloat(e.target.value);
+    if (!isNaN(newValue)) {
+      onChange(name, newValue);
+    }
   };
 
   const calculateThumbColor = (value, min, max) => {
@@ -77,7 +83,6 @@ const ControlDrawerUnit = ({
         min={min}
         max={max}
         onChange={handleSliderChange}
-        // @ts-ignore
         style={{ "--thumb-color": thumbColor }}
       />
       <div className="unit-description">{description}</div>
@@ -92,6 +97,7 @@ ControlDrawerUnit.propTypes = {
   max: PropTypes.number.isRequired,
   onChange: PropTypes.func.isRequired,
   description: PropTypes.string,
+  buttonChangeValue: PropTypes.number.isRequired,
 };
 
 export default ControlDrawerUnit;

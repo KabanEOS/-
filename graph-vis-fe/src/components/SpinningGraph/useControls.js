@@ -18,7 +18,9 @@ const useControls = () => {
   }, [controls]);
 
   const updateControl = (name, value) => {
-    setControls((prev) => ({ ...prev, [name]: value }));
+    const parsedValue =
+      typeof value === "number" && !isNaN(value) ? value : parseFloat(value);
+    setControls((prev) => ({ ...prev, [name]: parsedValue }));
   };
 
   return { controls, updateControl };

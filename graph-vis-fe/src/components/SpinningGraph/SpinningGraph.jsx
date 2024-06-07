@@ -14,8 +14,7 @@ const SpinningGraph = ({ nodes }) => {
   const centerX = window.innerWidth / 2;
   const centerY = window.innerHeight / 2.7;
   const location = useLocation();
-  const isHomePage = location.pathname == "/";
-  console.log("🚀 ~ SpinningGraph ~ isHomePage:", isHomePage);
+  const isHomePage = location.pathname === "/";
 
   useEffect(() => {
     const newPositions = nodes.map((node, index) => {
@@ -40,7 +39,7 @@ const SpinningGraph = ({ nodes }) => {
           min={minMaxValues[key]?.min || 0}
           max={minMaxValues[key]?.max || 100}
           description={descriptions[key] || ""}
-          onChange={(value) => updateControl(key, value)}
+          onChange={(name, value) => updateControl(name, value)}
           buttonChangeValue={minMaxValues[key]?.buttonChangeValue || 1}
         />
       ))}
