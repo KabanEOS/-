@@ -1,7 +1,7 @@
 // @ts-nocheck
 import React, { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
-import "./../styles/particle.styles.scss";
+import "./../../styles/particle.styles.scss";
 // Particles component now receives control parameters as props
 const Particles = ({ positions, controls }) => {
   const canvasRef = useRef(null);

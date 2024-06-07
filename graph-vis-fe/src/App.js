@@ -8,9 +8,10 @@ import {
 import About from "./pages/about/about";
 import LearnGraphs from "./pages/learn-graphs/index";
 import TraversalDemo from "./pages/traversal-demo/index";
-import SpinningGraph from "./components/SpinningGraph";
+import SpinningGraph from "./components/SpinningGraph/SpinningGraph.jsx";
 import Shadow from "./components/Shadow.jsx";
 import Signature from "./components/Signature.jsx";
+import { ControlDrawerProvider } from "./contexts/ControlDrawerContext.jsx";
 
 const App = () => {
   const nodes = [
@@ -42,7 +43,9 @@ const App = () => {
 
 const AppWrapper = () => (
   <Router>
-    <App />
+    <ControlDrawerProvider>
+      <App />
+    </ControlDrawerProvider>
   </Router>
 );
 

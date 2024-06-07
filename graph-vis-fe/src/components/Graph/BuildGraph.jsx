@@ -1,6 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
-import "./../styles/buildGraph.styles.scss";
+import "./../../styles/buildGraph.styles.scss";
 
 const BuildGraph = ({
   nodes,

@@ -1,6 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import { generateRandomBuildGraph } from "../../services/api";
-import BuildGraph from "../../components/BuildGraph";
+import BuildGraph from "../../components/Graph/BuildGraph";
 import { calculateNodePositions } from "../../utils/calculateNodePositions";
 import "../../styles/shared.styles.scss";
 import "../../styles/learnGraph.styles.scss";

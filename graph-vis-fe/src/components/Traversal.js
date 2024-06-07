@@ -6,7 +6,7 @@ import {
   getDfsTraversal,
   generateRandomTreeGraphForTraversal,
 } from "../services/api";
-import Graph from "./Graph";
+import Graph from "./Graph/Graph";
 
 const Traversal = () => {
   const [nodes, setNodes] = useState([]);
