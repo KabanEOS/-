@@ -5,6 +5,7 @@ import ControlDrawer from "./../ControlDrawer/ControlDrawer.jsx";
 import ControlDrawerUnit from "./../ControlDrawer/ControlDrawerUnit.jsx";
 import useControls from "./useControls";
 import { defaultControls, minMaxValues, descriptions } from "./constants";
+import { useLocation } from "react-router-dom";
 
 const SpinningGraph = ({ nodes }) => {
   const { controls, updateControl } = useControls();
@@ -12,6 +13,9 @@ const SpinningGraph = ({ nodes }) => {
   const radius = 180;
   const centerX = window.innerWidth / 2;
   const centerY = window.innerHeight / 2.7;
+  const location = useLocation();
+  const isHomePage = location.pathname == "/";
+  console.log("🚀 ~ SpinningGraph ~ isHomePage:", isHomePage);
 
   useEffect(() => {
     const newPositions = nodes.map((node, index) => {
@@ -45,9 +49,11 @@ const SpinningGraph = ({ nodes }) => {
 
   return (
     <div className="spinning-graph-container">
-      <ControlDrawer isInitiallyOpen={false} isHomeButtonShowed={true}>
-        {ControlDrawerContent}
-      </ControlDrawer>
+      {isHomePage && (
+        <ControlDrawer isInitiallyOpen={false} isHomeButtonShowed={false}>
+          {ControlDrawerContent}
+        </ControlDrawer>
+      )}
       <Particles positions={positions} controls={controls} />
     </div>
   );

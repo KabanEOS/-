@@ -44,9 +44,9 @@ const App = () => {
 
 const AppWrapper = () => (
   <Router>
-    <ControlDrawerProvider>
-      <App />
-    </ControlDrawerProvider>
+    {/* <ControlDrawerProvider> */}
+    <App />
+    {/* </ControlDrawerProvider> */}
   </Router>
 );
 

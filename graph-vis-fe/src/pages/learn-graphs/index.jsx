@@ -9,6 +9,7 @@ import {
 } from "./../../components/LearnGraphs/utils";
 import "../../styles/shared.styles.scss";
 import "../../styles/learnGraph.styles.scss";
+import ControlDrawer from "../../components/ControlDrawer/ControlDrawer";
 
 const LearnGraphs = () => {
   const initialNodesAmount = [30, 50];
@@ -133,37 +134,39 @@ const LearnGraphs = () => {
         Here you can learn about different graph algorithms, representations,
         and use cases.
       </p>
-      <LearnGraphsControls
-        numNodes={numNodes}
-        handleNumNodesChange={handleNumNodesChange}
-        numEdges={numEdges}
-        handleNumEdgesChange={handleNumEdgesChange}
-        optimalDistance={optimalDistance}
-        setOptimalDistance={setOptimalDistance}
-        maxIterations={maxIterations}
-        setMaxIterations={setMaxIterations}
-        nodeSize={nodeSize}
-        setNodeSize={setNodeSize}
-        connectivity={connectivity}
-        handleConnectivityChange={handleConnectivityChange}
-        fetchAndGenerateGraph={() =>
-          fetchAndGenerateGraph(
-            numNodes,
-            numEdges,
-            connectivity,
-            setGraphData,
-            setError,
-            setTransform,
-            svgWidth,
-            svgHeight,
-            nodeSize,
-            maxIterations,
-            optimalDistance
-          )
-        }
-        infoMessage={infoMessage}
-        error={error}
-      />
+      <ControlDrawer isInitiallyOpen={false} isHomeButtonShowed={true}>
+        <LearnGraphsControls
+          numNodes={numNodes}
+          handleNumNodesChange={handleNumNodesChange}
+          numEdges={numEdges}
+          handleNumEdgesChange={handleNumEdgesChange}
+          optimalDistance={optimalDistance}
+          setOptimalDistance={setOptimalDistance}
+          maxIterations={maxIterations}
+          setMaxIterations={setMaxIterations}
+          nodeSize={nodeSize}
+          setNodeSize={setNodeSize}
+          connectivity={connectivity}
+          handleConnectivityChange={handleConnectivityChange}
+          fetchAndGenerateGraph={() =>
+            fetchAndGenerateGraph(
+              numNodes,
+              numEdges,
+              connectivity,
+              setGraphData,
+              setError,
+              setTransform,
+              svgWidth,
+              svgHeight,
+              nodeSize,
+              maxIterations,
+              optimalDistance
+            )
+          }
+          infoMessage={infoMessage}
+          error={error}
+        />
+      </ControlDrawer>
       <LearnGraphsGraph
         graphData={graphData}
         transform={transform}
