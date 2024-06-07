@@ -6,11 +6,14 @@
   min-width: 300px;
   padding-right: 0px;
   height: 100vh;
-  z-index: 100 !important;
+  z-index: 29 !important;
   display: flex;
   justify-content: flex-end;
   background-color: #fff;
   transition: transform 0.3s ease-in-out;
+  .drawer-content {
+    z-index: 30 !important;
+  }
 
   &.closed {
     transform: translateX(-100%);

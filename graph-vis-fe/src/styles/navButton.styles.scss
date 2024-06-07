@@ -18,6 +18,7 @@
 }
 
 .background-circle {
+  cursor: pointer;
   // circle styling
   background-color: #ffffff85; /* Different color for distinction */
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.31);
@@ -32,7 +33,6 @@
   transform: translateY(-50%);
   transform: translateX(15%);
   z-index: 20;
-
   &.hovered-first {
     animation: scaleUpFirstCircle 0.15s ease-out forwards;
   }
@@ -40,10 +40,15 @@
   &.hovered-second {
     background-color: pink; /* Change background to pink on hover */
   }
+
+  &.open {
+    background-color: #f5f4f4;
+  }
 }
 
 .first-icon-container {
   .first-icon {
+    cursor: pointer;
     width: 45px;
     height: 45px;
     position: absolute;
@@ -51,17 +56,23 @@
     color: #ff000091;
     z-index: 21; /* On top */
 
-    &.hovered-first {
-      animation: scaleUpFirstIcon 0.15s ease-out forwards;
+    &.closed {
+      &.hovered-first {
+        animation: scaleUpFirstIcon 0.15s ease-out forwards;
+      }
     }
 
-    &.hovered-second {
-      background-color: pink; /* Change background to pink on hover */
+    &.open {
+      transform: scaleX(-1) translateX(12px) translateY(-20px);
+      &.hovered-first {
+        animation: scaleUpFirstIconFlipped 0.15s ease-out forwards;
+      }
     }
   }
 }
 
 .second-background-circle {
+  cursor: pointer;
   // circle styling
   background-color: #ffffff75;
   box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.31);
@@ -76,7 +87,6 @@
   transform: translateY(-50%); /* Align vertically */
   transform: translateX(20%); /* Align vertically */
   z-index: 17;
-
   &.hovered-second {
     animation: scaleUpSecondCircle 0.15s ease-out forwards;
   }
@@ -87,6 +97,7 @@
 }
 
 .second-icon {
+  cursor: pointer;
   // initial position, size, color
   width: 25px;
   height: 25px;
@@ -98,7 +109,7 @@
 
   &.hovered-second,
   .second-background-circle.hovered-second ~ & {
-    animation: changeSecondIconColorOnSecondHovered 0.15s ease-in forwards;
+    animation: changeSecondIconColorOnSecondHovered 0.15s ease-out forwards;
   }
 }
 
@@ -131,7 +142,7 @@
     width: 30px;
     height: 30px;
     transform: translateY(-50%); /* Align vertically */
-    transform: translateX(56px); /* Align vertically */
+    transform: translateX(58px); /* Align vertically */
   }
 }
 
@@ -174,6 +185,21 @@
   }
 }
 
+@keyframes scaleUpFirstIconFlipped {
+  0% {
+    width: 45px;
+    height: 45px;
+    transform: scaleX(-1) translateX(12px) translateY(-20px); /* Align vertically */
+    color: #ff000091;
+  }
+  100% {
+    width: 55px;
+    height: 55px;
+    transform: scaleX(-1) translateX(18px) translateY(-26px); /* Align vertically */
+    color: #f42525d0;
+  }
+}
+
 @keyframes scaleDownFirstIcon {
   0% {
     color: #f42525d0;
@@ -196,21 +222,11 @@
   }
 }
 
-@keyframes transparencyBlue {
+@keyframes flip {
   0% {
-    opacity: 1;
+    transform: scaleX(1);
   }
   100% {
-    opacity: 0.7;
-  }
-}
-
-@keyframes transparencyPink {
-  0% {
-    opacity: 1;
-  }
-  100% {
-    opacity: 0.7;
-    // transform: translateX(-10px);
+    transform: scaleX(-1);
   }
 }
