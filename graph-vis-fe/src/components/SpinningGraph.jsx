@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "./../styles/spinningGraphs.styles.scss";
 import Particles from "./Particles.jsx";
 import ControlDrawer from "./ControlDrawer/ControlDrawer.jsx";
-import Shadow from "./Shadow.jsx";
+import ControlDrawerUnit from "./ControlDrawer/ControlDrawerUnit.jsx";
 
 const SpinningGraph = ({ nodes }) => {
   const [positions, setPositions] = useState([]);
@@ -97,14 +97,28 @@ const SpinningGraph = ({ nodes }) => {
     setPositions(newPositions);
   }, [nodes, centerX, centerY, radius]);
 
+  const ControlDrawerContent = (
+    <div className="controls">
+      {Object.keys(controls).map((key) => (
+        <ControlDrawerUnit
+          key={key}
+          name={key}
+          value={controls[key]}
+          min={minMaxValues[key]?.min || 0}
+          max={minMaxValues[key]?.max || 100}
+          description={descriptions[key] || ""}
+          onChange={updateControl}
+          buttonChangeValue={minMaxValues[key]?.buttonChangeValue || 1}
+        />
+      ))}
+    </div>
+  );
+
   return (
     <div className="spinning-graph-container">
-      <ControlDrawer
-        controls={controls}
-        minMaxValues={minMaxValues}
-        onChange={updateControl}
-        descriptions={descriptions}
-      />
+      <ControlDrawer isInitiallyOpen={false} isHomeButtonShowed={false}>
+        {ControlDrawerContent}
+      </ControlDrawer>
       <Particles positions={positions} controls={controls} />
     </div>
   );

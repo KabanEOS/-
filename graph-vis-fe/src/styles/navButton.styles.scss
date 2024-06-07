@@ -94,6 +94,10 @@
   &.hovered-first {
     display: none;
   }
+
+  &.hide {
+    display: none;
+  }
 }
 
 .second-icon {
@@ -110,6 +114,10 @@
   &.hovered-second,
   .second-background-circle.hovered-second ~ & {
     animation: changeSecondIconColorOnSecondHovered 0.15s ease-out forwards;
+  }
+
+  &.hide {
+    display: none;
   }
 }
 

@@ -11,8 +11,13 @@
   justify-content: flex-end;
   background-color: #fff;
   transition: transform 0.3s ease-in-out;
+
   .drawer-content {
     z-index: 30 !important;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden; // Ensure the content does not overflow the container
   }
 
   &.closed {
@@ -49,5 +54,10 @@
         opacity 0.3s ease-in-out,
         transform 0.3s ease-in-out;
     }
+  }
+
+  .controls {
+    flex-grow: 1; // Allow controls to take remaining height
+    overflow-y: auto; // Enable vertical scrolling
   }
 }

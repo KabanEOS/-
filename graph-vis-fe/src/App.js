@@ -9,7 +9,6 @@ import About from "./pages/about/about";
 import LearnGraphs from "./pages/learn-graphs/index";
 import TraversalDemo from "./pages/traversal-demo/index";
 import SpinningGraph from "./components/SpinningGraph";
-import { NodePositionsProvider } from "./contexts/NodePositionsContext.jsx";
 import Shadow from "./components/Shadow.jsx";
 import Signature from "./components/Signature.jsx";
 
@@ -28,18 +27,16 @@ const App = () => {
   }, [location]);
 
   return (
-    <NodePositionsProvider>
-      <div className="App">
-        <Signature isHomePage={isHomePage} />
-        <Shadow isVisible={!isHomePage} />
-        <SpinningGraph nodes={nodes} />
-        <Routes>
-          <Route path="/graph-builder" element={<About />} />
-          <Route path="/learn-graphs" element={<LearnGraphs />} />
-          <Route path="/traversal-demo" element={<TraversalDemo />} />
-        </Routes>
-      </div>
-    </NodePositionsProvider>
+    <div className="App">
+      <Signature isHomePage={isHomePage} />
+      <Shadow isVisible={!isHomePage} />
+      <SpinningGraph nodes={nodes} />
+      <Routes>
+        <Route path="/graph-builder" element={<About />} />
+        <Route path="/learn-graphs" element={<LearnGraphs />} />
+        <Route path="/traversal-demo" element={<TraversalDemo />} />
+      </Routes>
+    </div>
   );
 };
 
