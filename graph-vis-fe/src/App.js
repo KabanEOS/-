@@ -12,6 +12,7 @@ import SpinningGraph from "./components/SpinningGraph/SpinningGraph.jsx";
 import Shadow from "./components/Shadow.jsx";
 import Signature from "./components/Signature.jsx";
 import { ControlDrawerProvider } from "./contexts/ControlDrawerContext.jsx";
+import ControlDrawer from "./components/ControlDrawer/ControlDrawer.jsx";
 
 const App = () => {
   const nodes = [

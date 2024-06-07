@@ -1,12 +1,11 @@
 import React, { useRef, useState, useEffect } from "react";
-// import LearnGraphsControls from "./LearnGraphsControls";
-import LearnGraphsControls from "./../../components/LearnGraphs/LearnGraphsControls";
-import LearnGraphsGraph from "./../../components/LearnGraphs/LearnGraphsGraph";
+import LearnGraphsControls from "./LearnGraphsControls";
+import LearnGraphsGraph from "./LearnGraphsGraph.jsx";
 import {
   validateGraphParameters,
   fetchAndGenerateGraph,
   centerGraph,
-} from "./../../components/LearnGraphs/utils";
+} from "./utils";
 import "../../styles/shared.styles.scss";
 import "../../styles/learnGraph.styles.scss";
 
