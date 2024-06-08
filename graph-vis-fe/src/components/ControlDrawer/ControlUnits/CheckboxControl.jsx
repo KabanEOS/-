@@ -1,6 +1,6 @@
-// CheckboxControl.js
 import React from "react";
 import PropTypes from "prop-types";
+import "./../../../styles/controlDrawerUnit.styles.scss";
 
 const CheckboxControl = ({ name, value, onChange, description }) => {
   const handleCheckboxChange = (e) => {

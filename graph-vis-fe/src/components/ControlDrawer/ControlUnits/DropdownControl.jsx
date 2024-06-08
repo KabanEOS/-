@@ -1,9 +1,10 @@
-// DropdownControl.js
 import React from "react";
 import PropTypes from "prop-types";
+import "./../../../styles/controlDrawerUnit.styles.scss";
 
 const DropdownControl = ({ name, value, options, onChange, description }) => {
   const handleSelectChange = (e) => {
+    e.preventDefault(); // Prevent default form submission behavior
     onChange(name, e.target.value);
   };
 

@@ -1,6 +1,7 @@
 import React from "react";
 import ControlDrawerUnit from "./../../components/ControlDrawer/ControlDrawerUnit";
 import { defaultControls, minMaxValues, descriptions } from "./controlSettings";
+import ButtonControl from "../ButtonControl";
 
 const LearnGraphsControls = ({
   numNodes,
@@ -28,7 +29,9 @@ const LearnGraphsControls = ({
         min={minMaxValues.NUMBER_OF_NODES.min}
         max={minMaxValues.NUMBER_OF_NODES.max}
         description={descriptions.NUMBER_OF_NODES}
-        onChange={(name, value) => handleNumNodesChange({ target: { value } })}
+        onChange={(name, value) =>
+          handleNumNodesChange({ target: { name, value } })
+        }
         buttonChangeValue={minMaxValues.NUMBER_OF_NODES.buttonChangeValue}
       />
       <ControlDrawerUnit
@@ -38,7 +41,9 @@ const LearnGraphsControls = ({
         min={minMaxValues.NUMBER_OF_EDGES.min}
         max={minMaxValues.NUMBER_OF_EDGES.max}
         description={descriptions.NUMBER_OF_EDGES}
-        onChange={(name, value) => handleNumEdgesChange({ target: { value } })}
+        onChange={(name, value) =>
+          handleNumEdgesChange({ target: { name, value } })
+        }
         buttonChangeValue={minMaxValues.NUMBER_OF_EDGES.buttonChangeValue}
       />
       <ControlDrawerUnit
@@ -77,9 +82,14 @@ const LearnGraphsControls = ({
         value={connectivity}
         options={["random", "tree", "complete"]}
         description="Sets the connectivity of the graph."
-        onChange={handleConnectivityChange}
+        onChange={(name, value) =>
+          handleConnectivityChange({ target: { name, value } })
+        }
       />
-      <button onClick={fetchAndGenerateGraph}>Generate External Graph</button>
+      <ButtonControl
+        onClick={fetchAndGenerateGraph}
+        label="Generate External Graph"
+      />
       {error && <p style={{ color: "red" }}>{error}</p>}
       {infoMessage && (
         <p

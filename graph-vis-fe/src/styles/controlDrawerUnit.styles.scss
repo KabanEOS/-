@@ -8,7 +8,6 @@
   justify-content: center;
   align-items: center;
   gap: 6px;
-  // width: fit-content;
   margin: 12px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 
@@ -25,78 +24,69 @@
     gap: 6px;
   }
 
-  .number-values {
+  .unit-name {
+    width: 100%;
+    text-align: center;
+    color: #333;
+    font-size: 1rem;
+    font-weight: 700;
     display: flex;
     flex-direction: row;
-    gap: 10px;
-    justify-content: space-between;
-    align-items: center;
-    width: 100%;
+    justify-content: center;
+    margin-left: 12px;
+  }
 
-    .unit-name {
-      width: 100%;
-      text-align: center;
-      color: #333;
-      font-size: 1rem;
-      font-weight: 700;
-      display: flex;
-      flex-direction: row;
-      justify-content: center;
-      margin-left: 12px;
+  .unit-input {
+    min-width: 56px;
+    text-align: center;
+    background-color: #20232a;
+    border: none;
+    border-radius: 4px;
+    color: #d3eff6;
+    font-size: 1rem;
+    font-weight: 500;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition:
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+
+    &:focus {
+      outline: none;
+      background-color: #282c34;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    }
+  }
+
+  .control-button {
+    min-width: 50px;
+    background-color: #20232a;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    font-weight: 700;
+    cursor: pointer;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    transition:
+      background-color 0.3s ease,
+      box-shadow 0.3s ease;
+
+    &:hover {
+      background-color: #282c34;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     }
 
-    .unit-input {
-      width: 56px;
-      text-align: center;
-      background-color: #20232a;
-      border: none;
-      border-radius: 4px;
-      color: #d3eff6;
-      font-size: 1rem;
-      font-weight: 500;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      transition:
-        background-color 0.3s ease,
-        box-shadow 0.3s ease;
-
-      &:focus {
-        outline: none;
-        background-color: #282c34;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      }
+    &:focus {
+      outline: none;
     }
 
-    .control-button {
-      min-width: 50px;
-      background-color: #20232a;
-      border: none;
-      border-radius: 4px;
-      font-size: 1rem;
-      font-weight: 700;
-      cursor: pointer;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-      transition:
-        background-color 0.3s ease,
-        box-shadow 0.3s ease;
+    &.decrement {
+      margin-right: 10px;
+      color: #fb6161;
+    }
 
-      &:hover {
-        background-color: #282c34;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-      }
-
-      &:focus {
-        outline: none;
-      }
-
-      &.decrement {
-        margin-right: 10px;
-        color: #fb6161;
-      }
-
-      &.increment {
-        margin-left: 10px;
-        color: #85affb;
-      }
+    &.increment {
+      margin-left: 10px;
+      color: #85affb;
     }
   }
 
@@ -145,5 +135,79 @@
   .unit-description {
     color: #666;
     font-size: 0.85rem;
+  }
+}
+
+// Dropdown Control
+.unit-container .unit-input {
+  width: 100%;
+  text-align: center;
+  background-color: #20232a;
+  border: none;
+  border-radius: 4px;
+  color: #d3eff6;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  padding: 8px;
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:focus {
+    outline: none;
+    background-color: #282c34;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Checkbox Control
+.unit-container .unit-input {
+  width: 16px;
+  height: 16px;
+  background-color: #20232a;
+  border: none;
+  border-radius: 4px;
+  color: #d3eff6;
+  font-size: 1rem;
+  font-weight: 500;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+  cursor: pointer;
+
+  &:focus {
+    outline: none;
+    background-color: #282c34;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Button Control
+.control-button {
+  min-width: 120px;
+  background-color: #20232a;
+  border: none;
+  border-radius: 4px;
+  font-size: 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 10px 20px;
+  color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  transition:
+    background-color 0.3s ease,
+    box-shadow 0.3s ease;
+
+  &:hover {
+    background-color: #282c34;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  }
+
+  &:focus {
+    outline: none;
+    background-color: #282c34;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 }

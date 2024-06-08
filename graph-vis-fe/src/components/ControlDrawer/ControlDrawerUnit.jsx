@@ -1,21 +1,44 @@
-// ControlDrawerUnit.jsx
 import React from "react";
 import PropTypes from "prop-types";
-import NumericControl from "./NumericControl";
-import DropdownControl from "./DropdownControl";
-import CheckboxControl from "./CheckboxControl";
+
 import "./../../styles/controlDrawerUnit.styles.scss";
+import NumericControl from "./ControlUnits/NumericControl.jsx";
+import DropdownControl from "./ControlUnits/DropdownControl";
 
-const ControlDrawerUnit = (props) => {
-  const { type, ...otherProps } = props;
-
+const ControlDrawerUnit = ({
+  type,
+  name,
+  value,
+  min,
+  max,
+  options,
+  onChange,
+  description,
+  buttonChangeValue,
+}) => {
   switch (type) {
     case "numeric":
-      return <NumericControl {...otherProps} />;
+      return (
+        <NumericControl
+          name={name}
+          value={value}
+          min={min}
+          max={max}
+          onChange={onChange}
+          description={description}
+          buttonChangeValue={buttonChangeValue}
+        />
+      );
     case "dropdown":
-      return <DropdownControl {...otherProps} />;
-    case "checkbox":
-      return <CheckboxControl {...otherProps} />;
+      return (
+        <DropdownControl
+          name={name}
+          value={value}
+          options={options}
+          onChange={onChange}
+          description={description}
+        />
+      );
     default:
       return null;
   }
@@ -31,10 +54,10 @@ ControlDrawerUnit.propTypes = {
   ]).isRequired,
   min: PropTypes.number,
   max: PropTypes.number,
+  options: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
   description: PropTypes.string,
   buttonChangeValue: PropTypes.number,
-  options: PropTypes.arrayOf(PropTypes.string), // For dropdown
 };
 
 export default ControlDrawerUnit;

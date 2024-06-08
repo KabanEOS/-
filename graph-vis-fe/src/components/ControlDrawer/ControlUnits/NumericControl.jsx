@@ -1,6 +1,6 @@
-// NumericControl.js
 import React from "react";
 import PropTypes from "prop-types";
+import "./../../../styles/controlDrawerUnit.styles.scss";
 
 const NumericControl = ({
   name,
