@@ -5,6 +5,7 @@ import { useLocation } from "react-router-dom";
 import HoverCircleIcon from "./HoverCircleIcon.jsx";
 
 const ControlDrawer = ({ children, isInitiallyOpen, isHomeButtonShowed }) => {
+  console.log("🚀 ~ ControlDrawer ~ children:", children);
   const [isOpen, setIsOpen] = useState(isInitiallyOpen);
 
   const toggleDrawer = () => {

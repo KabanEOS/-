@@ -1,103 +1,40 @@
+// ControlDrawerUnit.jsx
 import React from "react";
 import PropTypes from "prop-types";
+import NumericControl from "./NumericControl";
+import DropdownControl from "./DropdownControl";
+import CheckboxControl from "./CheckboxControl";
 import "./../../styles/controlDrawerUnit.styles.scss";
 
-const ControlDrawerUnit = ({
-  name,
-  value,
-  min,
-  max,
-  onChange,
-  description,
-  buttonChangeValue,
-}) => {
-  const incrementValue = () => {
-    onChange(name, Math.min(value + buttonChangeValue, max));
-  };
+const ControlDrawerUnit = (props) => {
+  const { type, ...otherProps } = props;
 
-  const decrementValue = () => {
-    onChange(name, Math.max(value - buttonChangeValue, min));
-  };
-
-  const handleInputChange = (e) => {
-    const newValue = parseFloat(e.target.value);
-    if (!isNaN(newValue)) {
-      onChange(name, newValue);
-    }
-  };
-
-  const handleSliderChange = (e) => {
-    const newValue = parseFloat(e.target.value);
-    if (!isNaN(newValue)) {
-      onChange(name, newValue);
-    }
-  };
-
-  const calculateThumbColor = (value, min, max) => {
-    const ratio = (value - min) / (max - min);
-    const red = Math.round(234 + ratio * (133 - 234));
-    const green = Math.round(92 + ratio * (175 - 92));
-    const blue = Math.round(92 + ratio * (251 - 92));
-    return `rgba(${red}, ${green}, ${blue}, 1)`;
-  };
-
-  const thumbColor = calculateThumbColor(value, min, max);
-
-  return (
-    <div className="unit-container">
-      <div className="number-values">
-        <div className="control-section-unit">
-          <div className="unit-name">{name.replace(/_/g, " ")}</div>
-          <div>
-            <button
-              className="control-button decrement"
-              onClick={decrementValue}
-            >
-              -{buttonChangeValue}
-            </button>
-            <input
-              className="unit-input"
-              type="number"
-              id={name}
-              name={name}
-              value={value}
-              min={min}
-              max={max}
-              onChange={handleInputChange}
-            />
-            <button
-              className="control-button increment"
-              onClick={incrementValue}
-            >
-              +{buttonChangeValue}
-            </button>
-          </div>
-        </div>
-      </div>
-      <input
-        className="range-input"
-        type="range"
-        id={name}
-        name={name}
-        value={value}
-        min={min}
-        max={max}
-        onChange={handleSliderChange}
-        style={{ "--thumb-color": thumbColor }}
-      />
-      <div className="unit-description">{description}</div>
-    </div>
-  );
+  switch (type) {
+    case "numeric":
+      return <NumericControl {...otherProps} />;
+    case "dropdown":
+      return <DropdownControl {...otherProps} />;
+    case "checkbox":
+      return <CheckboxControl {...otherProps} />;
+    default:
+      return null;
+  }
 };
 
 ControlDrawerUnit.propTypes = {
+  type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
-  min: PropTypes.number.isRequired,
-  max: PropTypes.number.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.bool,
+  ]).isRequired,
+  min: PropTypes.number,
+  max: PropTypes.number,
   onChange: PropTypes.func.isRequired,
   description: PropTypes.string,
-  buttonChangeValue: PropTypes.number.isRequired,
+  buttonChangeValue: PropTypes.number,
+  options: PropTypes.arrayOf(PropTypes.string), // For dropdown
 };
 
 export default ControlDrawerUnit;

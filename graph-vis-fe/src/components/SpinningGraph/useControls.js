@@ -1,21 +1,21 @@
 import { useState, useEffect } from "react";
 import { defaultControls } from "./constants";
 
-const useControls = () => {
+const useControls = (storageKey) => {
   const [controls, setControls] = useState(() => {
-    const savedControls = localStorage.getItem("particleControls");
+    const savedControls = localStorage.getItem(storageKey);
     return savedControls ? JSON.parse(savedControls) : defaultControls;
   });
 
   useEffect(() => {
-    if (!localStorage.getItem("particleControls")) {
-      localStorage.setItem("particleControls", JSON.stringify(defaultControls));
+    if (!localStorage.getItem(storageKey)) {
+      localStorage.setItem(storageKey, JSON.stringify(defaultControls));
     }
-  }, []);
+  }, [storageKey]);
 
   useEffect(() => {
-    localStorage.setItem("particleControls", JSON.stringify(controls));
-  }, [controls]);
+    localStorage.setItem(storageKey, JSON.stringify(controls));
+  }, [controls, storageKey]);
 
   const updateControl = (name, value) => {
     const parsedValue =
