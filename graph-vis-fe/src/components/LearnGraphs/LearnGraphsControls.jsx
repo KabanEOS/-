@@ -21,7 +21,7 @@ const LearnGraphsControls = ({
   error,
 }) => {
   return (
-    <div>
+    <div className="units-wrapper">
       <ControlDrawerUnit
         type="numeric"
         name="NUMBER_OF_NODES"

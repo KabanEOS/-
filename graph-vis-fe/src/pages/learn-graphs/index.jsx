@@ -134,7 +134,11 @@ const LearnGraphs = () => {
         Here you can learn about different graph algorithms, representations,
         and use cases.
       </p>
-      <ControlDrawer isInitiallyOpen={false} isHomeButtonShowed={true}>
+      <ControlDrawer
+        isInitiallyOpen={true}
+        isHomeButtonShowed={true}
+        maxWidth={350}
+      >
         <LearnGraphsControls
           numNodes={numNodes}
           handleNumNodesChange={handleNumNodesChange}

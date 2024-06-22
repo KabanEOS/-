@@ -12,6 +12,7 @@ const DropdownControl = ({ name, value, options, onChange, description }) => {
     <div className="unit-container">
       <div className="control-section-unit">
         <div className="unit-name">{name.replace(/_/g, " ")}</div>
+        <div className="unit-name">{value}</div>
         <select
           className="unit-input"
           value={value}

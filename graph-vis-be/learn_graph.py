@@ -79,5 +79,3 @@ def check_graph_connectivity(nodes, edges):
 num_nodes = 48
 num_edges = 30
 graph = generate_random_build_graph(num_nodes, num_edges)
-print("Graph nodes:", graph.nodes)
-print("Graph edges:", graph.edges)

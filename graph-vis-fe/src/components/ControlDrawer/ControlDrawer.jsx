@@ -4,7 +4,12 @@ import "./../../styles/controlDrawer.styles.scss";
 import { useLocation } from "react-router-dom";
 import HoverCircleIcon from "./HoverCircleIcon.jsx";
 
-const ControlDrawer = ({ children, isInitiallyOpen, isHomeButtonShowed }) => {
+const ControlDrawer = ({
+  children,
+  isInitiallyOpen,
+  isHomeButtonShowed,
+  maxWidth,
+}) => {
   const [isOpen, setIsOpen] = useState(isInitiallyOpen);
 
   const toggleDrawer = () => {
@@ -19,7 +24,10 @@ const ControlDrawer = ({ children, isInitiallyOpen, isHomeButtonShowed }) => {
   }, [location]);
 
   return (
-    <div className={`drawer-container ${isOpen ? "opened" : "closed"}`}>
+    <div
+      className={`drawer-container ${isOpen ? "opened" : "closed"}`}
+      style={{ maxWidth: maxWidth }}
+    >
       <HoverCircleIcon
         icon={RiArrowRightWideFill}
         icon2={RiHomeFill}
