@@ -127,6 +127,7 @@ const LearnGraphs = () => {
     });
   };
 
+  console.log("🚀 ~ LearnGraphs ~ connectivity:", connectivity);
   return (
     <div className="show-over-shadow">
       <h2>Learn Graphs</h2>

@@ -12,18 +12,20 @@ const DropdownControl = ({ name, value, options, onChange, description }) => {
     <div className="unit-container">
       <div className="control-section-unit">
         <div className="unit-name">{name.replace(/_/g, " ")}</div>
-        <div className="unit-name">{value}</div>
-        <select
-          className="unit-input"
-          value={value}
-          onChange={handleSelectChange}
-        >
-          {options.map((option) => (
-            <option key={option} value={option}>
-              {option}
-            </option>
-          ))}
-        </select>
+        <div className="dropdown-input-row">
+          <select
+            className="unit-input-dropdown"
+            value={value}
+            onChange={handleSelectChange}
+          >
+            {options.map((option) => (
+              <option key={option} value={option}>
+                {option}
+              </option>
+            ))}
+            <div className="unit-name">{value}</div>
+          </select>
+        </div>
         <div className="unit-description">{description}</div>
       </div>
     </div>

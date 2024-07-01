@@ -88,7 +88,7 @@ const LearnGraphsControls = ({
       />
       <ButtonControl
         onClick={fetchAndGenerateGraph}
-        label="Generate External Graph"
+        label="Generate Random Graph"
       />
       {error && <p style={{ color: "red" }}>{error}</p>}
       {infoMessage && (

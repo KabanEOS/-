@@ -4,7 +4,11 @@ import "./../styles/controlDrawerUnit.styles.scss";
 
 const ButtonControl = ({ onClick, label }) => {
   return (
-    <button className="control-button" onClick={onClick}>
+    <button
+      className="control-button"
+      onClick={onClick}
+      style={{ backgroundColor: "#fb6161" }}
+    >
       {label}
     </button>
   );
