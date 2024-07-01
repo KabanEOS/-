@@ -3,6 +3,7 @@
   background-color: #f0f0f0;
   border-radius: 5px;
   text-align: center;
+  gap: 6px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -62,6 +63,7 @@
     text-align: center;
     background-color: #20232a;
     border: none;
+    cursor: pointer;
     border-radius: 4px;
     color: #d3eff6;
     font-size: 1rem;

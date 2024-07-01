@@ -130,11 +130,13 @@ const LearnGraphs = () => {
   console.log("🚀 ~ LearnGraphs ~ connectivity:", connectivity);
   return (
     <div className="show-over-shadow">
-      <h2>Learn Graphs</h2>
-      <p>
-        Here you can learn about different graph algorithms, representations,
-        and use cases.
-      </p>
+      <div className="centralize">
+        <h2>Learn Graphs</h2>
+        <p>
+          Here you can learn about different graph algorithms, representations,
+          and use cases.
+        </p>
+      </div>
       <ControlDrawer
         isInitiallyOpen={true}
         isHomeButtonShowed={true}
