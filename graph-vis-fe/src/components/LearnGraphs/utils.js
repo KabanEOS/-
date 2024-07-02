@@ -41,7 +41,8 @@ export const fetchAndGenerateGraph = async (
   svgHeight,
   nodeSize,
   maxIterations,
-  optimalDistance
+  optimalDistance,
+  setGraphFormats // Add this parameter to handle graph formats
 ) => {
   const containerWidth = svgWidth;
   const containerHeight = svgHeight;
@@ -52,9 +53,10 @@ export const fetchAndGenerateGraph = async (
       numEdges,
       connectivity
     );
+
     const nodesWithPositions = calculateNodePositions(
-      data.nodes,
-      data.edges,
+      data.graph.nodes,
+      data.graph.edges,
       containerWidth * 3,
       containerHeight * 3,
       nodeSize,
@@ -69,8 +71,9 @@ export const fetchAndGenerateGraph = async (
       setGraphData({ nodes: [], edges: [] });
     } else {
       setError(null);
-      setGraphData({ nodes: nodesWithPositions, edges: data.edges });
+      setGraphData({ nodes: nodesWithPositions, edges: data.graph.edges });
       centerGraph(nodesWithPositions, setTransform, svgWidth, svgHeight);
+      setGraphFormats(data.formats); // Set the graph formats
     }
   } catch (err) {
     console.error("🚀 ~ fetchRandomBuildGraph ~ error:", err);

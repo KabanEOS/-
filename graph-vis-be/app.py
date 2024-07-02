@@ -1,4 +1,3 @@
-# In your Flask app
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from graph_algorithms import (
@@ -7,7 +6,8 @@ from graph_algorithms import (
     generate_random_tree_graph
 )
 from learn_graph import (
-    generate_random_build_graph
+    generate_random_build_graph,
+    get_graph_formats
 )
 from models import GraphDTO
 
@@ -64,8 +64,11 @@ def generate_random_graph_endpoint():
               num_edges} edges, and {connectivity} connectivity")
         graph = generate_random_build_graph(
             num_nodes, num_edges, connectivity, **additional_params)
-        # print(f"Generated graph: {graph}")
-        return jsonify(graph.dict())
+        graph_formats = get_graph_formats(graph)
+        return jsonify({
+            "graph": graph.dict(),
+            "formats": graph_formats
+        })
     except Exception as e:
         print(f"Error in generate_random_graph: {e}")
         return jsonify({"error": str(e)}), 500

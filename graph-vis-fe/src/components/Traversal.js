@@ -13,7 +13,6 @@ const Traversal = () => {
   const [edges, setEdges] = useState([]);
   const [sequence, setSequence] = useState([]);
   const [currentStep, setCurrentStep] = useState(0);
-  // @ts-ignore
   const [intervalId, setIntervalId] = useState(null);
   const [speed, setSpeed] = useState(1000);
   const [traversalName, setTraversalName] = useState("");

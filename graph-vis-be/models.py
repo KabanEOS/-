@@ -4,8 +4,6 @@ from typing import List
 
 class NodeDTO(BaseModel):
     id: int
-    x: int
-    y: int
 
 
 class EdgeDTO(BaseModel):

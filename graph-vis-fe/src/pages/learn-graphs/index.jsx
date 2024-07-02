@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
-// import LearnGraphsControls from "./LearnGraphsControls";
 import LearnGraphsControls from "./../../components/LearnGraphs/LearnGraphsControls";
 import LearnGraphsGraph from "./../../components/LearnGraphs/LearnGraphsGraph";
+import LearnGraphFormats from "./../../components/LearnGraphs/LearnGraphFormats.jsx";
 import {
   validateGraphParameters,
   fetchAndGenerateGraph,
@@ -12,7 +12,7 @@ import "../../styles/learnGraph.styles.scss";
 import ControlDrawer from "../../components/ControlDrawer/ControlDrawer";
 
 const LearnGraphs = () => {
-  const initialNodesAmount = [30, 50];
+  const initialNodesAmount = [18, 24];
   const [numNodes, setNumNodes] = useState(
     Math.floor(
       Math.random() * (initialNodesAmount[1] - initialNodesAmount[0] + 1)
@@ -20,7 +20,7 @@ const LearnGraphs = () => {
   );
   const [connectivity, setConnectivity] = useState("random");
 
-  const initialEdgesAmount = [51, 70];
+  const initialEdgesAmount = [20, 30];
   const initialEdges =
     Math.floor(
       Math.random() * (initialEdgesAmount[1] - initialEdgesAmount[0] + 1)
@@ -29,6 +29,7 @@ const LearnGraphs = () => {
     validateGraphParameters(numNodes, initialEdges, connectivity);
 
   const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
+  const [graphFormats, setGraphFormats] = useState({});
   const [error, setError] = useState(null);
   const [numEdges, setNumEdges] = useState(initialNumEdges);
   const [infoMessage, setInfoMessage] = useState(initialInfoMessage);
@@ -37,14 +38,12 @@ const LearnGraphs = () => {
   const [nodeSize, setNodeSize] = useState(
     Math.floor(
       window.innerWidth > 1600
-        ? window.innerWidth * 0.007
-        : window.innerWidth * 0.014
+        ? window.innerWidth * 0.012
+        : window.innerWidth * 0.018
     )
   );
   const [svgWidth, setSvgWidth] = useState(3000);
   const [svgHeight, setSvgHeight] = useState(3000);
-
-  const graphRef = useRef(null);
 
   const [transform, setTransform] = useState({
     scale: 1,
@@ -64,18 +63,10 @@ const LearnGraphs = () => {
       svgHeight,
       nodeSize,
       maxIterations,
-      optimalDistance
+      optimalDistance,
+      setGraphFormats // Pass the setGraphFormats callback
     );
-  }, [
-    numNodes,
-    numEdges,
-    maxIterations,
-    optimalDistance,
-    nodeSize,
-    connectivity,
-    svgWidth,
-    svgHeight,
-  ]);
+  }, [numNodes, numEdges, maxIterations, optimalDistance, connectivity]);
 
   const handleNumNodesChange = (e) => {
     const newNumNodes = Number(e.target.value);
@@ -173,7 +164,8 @@ const LearnGraphs = () => {
               svgHeight,
               nodeSize,
               maxIterations,
-              optimalDistance
+              optimalDistance,
+              setGraphFormats // Pass the setGraphFormats callback
             )
           }
           infoMessage={infoMessage}
@@ -188,6 +180,7 @@ const LearnGraphs = () => {
         nodeSize={nodeSize}
         handleWheel={handleWheel}
       />
+      {graphFormats && <LearnGraphFormats graphFormats={graphFormats} />}
     </div>
   );
 };

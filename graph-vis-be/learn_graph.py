@@ -69,7 +69,10 @@ def get_graph_formats(graph_dto):
     adjacency_matrix = nx.adjacency_matrix(G).todense().tolist()
 
     # DOT format
-    dot_format = nx.drawing.nx_agraph.to_agraph(G).to_string()
+    try:
+        dot_format = nx.drawing.nx_agraph.to_agraph(G).to_string()
+    except ImportError as e:
+        dot_format = str(e)
 
     # GML format
     gml_format = '\n'.join(nx.generate_gml(G))
@@ -106,3 +109,9 @@ def check_graph_connectivity(nodes, edges):
 
     dfs(0)
     return len(visited) == len(nodes)
+
+
+# Example usage:
+num_nodes = 48
+num_edges = 30
+graph = generate_random_build_graph(num_nodes, num_edges)
