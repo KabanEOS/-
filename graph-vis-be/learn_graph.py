@@ -1,5 +1,6 @@
 import random
 from models import GraphDTO, NodeDTO, EdgeDTO
+import networkx as nx
 
 
 def generate_random_build_graph(num_nodes: int, num_edges: int = None, connectivity: str = "random", **kwargs) -> GraphDTO:
@@ -45,12 +46,44 @@ def generate_random_build_graph(num_nodes: int, num_edges: int = None, connectiv
 
     graph = GraphDTO(nodes=nodes, edges=edges)
 
-    # Log connectivity
-    is_connected = check_graph_connectivity(graph.nodes, graph.edges)
-    print(f"Generated graph is {
-          'connected' if is_connected else 'not connected'}")
-
     return graph
+
+
+def convert_to_networkx(graph_dto):
+    G = nx.Graph()
+    for node in graph_dto.nodes:
+        G.add_node(node.id)
+    for edge in graph_dto.edges:
+        G.add_edge(edge.source, edge.target)
+    return G
+
+
+def get_graph_formats(graph_dto):
+    G = convert_to_networkx(graph_dto)
+
+    # Adjacency List
+    adjacency_list = {node: list(neighbors)
+                      for node, neighbors in G.adjacency()}
+
+    # Adjacency Matrix
+    adjacency_matrix = nx.adjacency_matrix(G).todense().tolist()
+
+    # DOT format
+    dot_format = nx.drawing.nx_agraph.to_agraph(G).to_string()
+
+    # GML format
+    gml_format = '\n'.join(nx.generate_gml(G))
+
+    # GraphML format
+    graphml_format = '\n'.join(nx.generate_graphml(G))
+
+    return {
+        "adjacency_list": adjacency_list,
+        "adjacency_matrix": adjacency_matrix,
+        "dot": dot_format,
+        "gml": gml_format,
+        "graphml": graphml_format
+    }
 
 # Ensuring graph connectivity
 
@@ -73,9 +106,3 @@ def check_graph_connectivity(nodes, edges):
 
     dfs(0)
     return len(visited) == len(nodes)
-
-
-# Example usage:
-num_nodes = 48
-num_edges = 30
-graph = generate_random_build_graph(num_nodes, num_edges)

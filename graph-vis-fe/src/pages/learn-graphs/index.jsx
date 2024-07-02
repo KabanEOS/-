@@ -35,7 +35,11 @@ const LearnGraphs = () => {
   const [maxIterations, setMaxIterations] = useState(1000);
   const [optimalDistance, setOptimalDistance] = useState(100);
   const [nodeSize, setNodeSize] = useState(
-    Math.floor(window.innerWidth * 0.014)
+    Math.floor(
+      window.innerWidth > 1600
+        ? window.innerWidth * 0.007
+        : window.innerWidth * 0.014
+    )
   );
   const [svgWidth, setSvgWidth] = useState(3000);
   const [svgHeight, setSvgHeight] = useState(3000);

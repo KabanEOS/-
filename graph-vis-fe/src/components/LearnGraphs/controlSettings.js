@@ -12,7 +12,7 @@ export const minMaxValues = {
   NUMBER_OF_NODES: { min: 1, max: 1000, buttonChangeValue: 5 },
   NUMBER_OF_EDGES: { min: 1, max: 1000, buttonChangeValue: 5 },
   OPTIMAL_DISTANCE: { min: 1, max: 300, buttonChangeValue: 10 },
-  MAX_ITERATIONS: { min: 1, max: 5000, buttonChangeValue: 500 },
+  MAX_ITERATIONS: { min: 1, max: 16000, buttonChangeValue: 500 },
   NODE_SIZE: { min: 5, max: 50, buttonChangeValue: 5 },
 };
 
