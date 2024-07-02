@@ -139,6 +139,7 @@ const LearnGraphs = () => {
         </p>
       </div>
       <ControlDrawer
+        onToggle={undefined}
         isInitiallyOpen={true}
         isHomeButtonShowed={true}
         maxWidth={350}

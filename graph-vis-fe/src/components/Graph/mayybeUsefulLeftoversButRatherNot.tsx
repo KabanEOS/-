@@ -89,6 +89,46 @@ const BuildGraph = ({
         />
       ))}
       {/* Red rectangle */}
+      <rect
+        x={minX * transform.scale + transform.translateX - nodeSize / 2}
+        y={minY * transform.scale + transform.translateY - nodeSize / 2}
+        width={graphWidth * transform.scale + nodeSize}
+        height={graphHeight * transform.scale + nodeSize}
+        stroke="red"
+        fill="none"
+        strokeWidth="2"
+      />
+      {/* Dots in the middle of the edges of the red rectangle */}
+      <circle cx={midTopX} cy={midTopY} r={5} fill="red" />
+      <circle cx={midBottomX} cy={midBottomY} r={5} fill="red" />
+      <circle cx={midLeftX} cy={midLeftY} r={5} fill="red" />
+      <circle cx={midRightX} cy={midRightY} r={5} fill="red" />
+      {/* Yellow dot at the graph center */}
+      <circle
+        cx={centerX * transform.scale + transform.translateX}
+        cy={centerY * transform.scale + transform.translateY}
+        r={10}
+        fill="yellow"
+      />
+      {/* Blue cross lines */}
+      <line
+        x1="0"
+        y1={svgHeight / 2}
+        x2={svgWidth}
+        y2={svgHeight / 2}
+        stroke="blue"
+        strokeWidth="2"
+      />
+      <line
+        x1={svgWidth / 2}
+        y1="0"
+        x2={svgWidth / 2}
+        y2={svgHeight}
+        stroke="blue"
+        strokeWidth="2"
+      />
+      {/* White dot at the center of the SVG */}
+      <circle cx={svgWidth / 2} cy={svgHeight / 2} r={20} fill="white" />
     </svg>
   );
 };
