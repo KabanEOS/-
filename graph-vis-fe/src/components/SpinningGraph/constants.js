@@ -14,8 +14,8 @@ export const defaultControls = {
   MAX_SPEED: 0.4,
   SLOW_DOWN_FACTOR: 0.98,
   ATTRACTION_FACTOR: 0.01,
-  PARTICLE_COLOR: "#ffffff",
-  NODE_PARTICLE_COLOR: "#ff0000",
+  // PARTICLE_COLOR: "#ffffff",
+  // NODE_PARTICLE_COLOR: "#ff0000",
 };
 
 export const minMaxValues = {

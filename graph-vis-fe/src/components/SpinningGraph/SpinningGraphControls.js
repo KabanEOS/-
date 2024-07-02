@@ -1,13 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 import ControlDrawerUnit from "./../ControlDrawer/ControlDrawerUnit";
 import { defaultControls, minMaxValues, descriptions } from "./constants";
 import useControls from "./useControls";
+import FullPageReloaderSpinner from "./../../components/fullPageReloaderSpinner.jsx"; // Ensure this import is correct
 
-const SpinningGraphControls = ({ storageKey }) => {
-  const { controls, updateControl } = useControls(storageKey);
+const SpinningGraphControls = ({ storageKey, controls, updateControl }) => {
+  const [showLoader, setShowLoader] = useState(false);
+
+  const timeOutReload = () =>
+    setTimeout(() => {
+      reload();
+    }, 3000);
+
+  const reload = () => {
+    setShowLoader(true);
+    setTimeout(() => {
+      setShowLoader(false);
+      window.location.reload();
+    }, 1000); // Wait for 3 seconds after each controls update
+  };
 
   return (
     <div className="controls">
+      {showLoader && <FullPageReloaderSpinner />}
       {Object.keys(defaultControls).map((key) => {
         const control = defaultControls[key];
         const controlValue =
@@ -20,13 +35,16 @@ const SpinningGraphControls = ({ storageKey }) => {
         return (
           <ControlDrawerUnit
             key={key}
-            type="numeric" // Adjust this based on the type of control
+            type="numeric"
             name={key}
             value={controlValue}
             min={minValue}
             max={maxValue}
             description={description}
-            onChange={(name, value) => updateControl(name, value)}
+            onChange={(name, value) => {
+              updateControl(name, value);
+              timeOutReload();
+            }}
             buttonChangeValue={buttonChangeValue}
           />
         );

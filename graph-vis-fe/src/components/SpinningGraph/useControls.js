@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { defaultControls } from "./constants";
 
-const useControls = (storageKey) => {
+const useControls = (storageKey, onUpdate) => {
   const [controls, setControls] = useState(() => {
     const savedControls = localStorage.getItem(storageKey);
     return savedControls ? JSON.parse(savedControls) : defaultControls;
@@ -15,12 +15,21 @@ const useControls = (storageKey) => {
 
   useEffect(() => {
     localStorage.setItem(storageKey, JSON.stringify(controls));
-  }, [controls, storageKey]);
+    if (onUpdate) {
+      onUpdate(controls);
+    }
+  }, [controls, storageKey, onUpdate]);
 
   const updateControl = (name, value) => {
     const parsedValue =
       typeof value === "number" && !isNaN(value) ? value : parseFloat(value);
-    setControls((prev) => ({ ...prev, [name]: parsedValue }));
+    setControls((prev) => {
+      const newControls = { ...prev, [name]: parsedValue };
+      if (onUpdate) {
+        onUpdate(newControls);
+      }
+      return newControls;
+    });
   };
 
   return { controls, updateControl };

@@ -9,11 +9,16 @@ const ControlDrawer = ({
   isInitiallyOpen,
   isHomeButtonShowed,
   maxWidth,
+  onToggle,
 }) => {
   const [isOpen, setIsOpen] = useState(isInitiallyOpen);
 
   const toggleDrawer = () => {
-    setIsOpen(!isOpen);
+    const newIsOpen = !isOpen;
+    setIsOpen(newIsOpen);
+    if (onToggle) {
+      onToggle(newIsOpen);
+    }
   };
 
   const location = useLocation();
