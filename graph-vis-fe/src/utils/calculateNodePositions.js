@@ -22,7 +22,7 @@ export const calculateNodePositions = (
     };
   });
 
-  console.log("Initial positions:", positions);
+  // console.log("Initial positions:", positions);
 
   // Function to calculate repulsive force
   const repulsiveForce = (distance) => k ** 2 / distance;
@@ -92,7 +92,7 @@ export const calculateNodePositions = (
     applyForces();
     // Visualize or log intermediate states
     if (i % 100 === 0) {
-      console.log(`Iteration ${i}`, positions);
+      // console.log(`Iteration ${i}`, positions);
     }
   }
 
@@ -122,11 +122,11 @@ export const calculateNodePositions = (
     positions[node.id].y += offsetY;
   });
 
-  console.log("Final positions:", positions);
+  // console.log("Final positions:", positions);
 
   // Check connectivity
   const isConnected = checkGraphConnectivity(nodes, edges);
-  console.log("Graph connectivity check:", { isConnected });
+  // console.log("Graph connectivity check:", { isConnected });
 
   // Assign final positions to nodes
   return nodes.map((node) => ({
@@ -162,6 +162,6 @@ const checkGraphConnectivity = (nodes, edges) => {
   }
 
   const isConnected = visited.size === nodes.length;
-  console.log("Graph connectivity check:", { isConnected });
+  // console.log("Graph connectivity check:", { isConnected });
   return isConnected;
 };

@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+
 import PropTypes from "prop-types";
 import "./../../styles/buildGraph.styles.scss";
 
@@ -10,12 +11,14 @@ const BuildGraph = ({
   svgWidth,
   svgHeight,
 }) => {
+  const [hoveredNodeId, setHoveredNodeId] = useState(null);
+
   if (!nodes || !edges) {
     return null;
   }
 
-  console.log("Nodes - from BuildGraph: ", nodes);
-  console.log("Edges - from BuildGraph: ", edges);
+  // console.log("Nodes - from BuildGraph: ", nodes);
+  // console.log("Edges - from BuildGraph: ", edges);
 
   const minX = Math.min(...nodes.map((node) => node.x));
   const maxX = Math.max(...nodes.map((node) => node.x));
@@ -27,7 +30,7 @@ const BuildGraph = ({
   // Calculate the center of the graph
   const centerX = (minX + maxX) / 2;
   const centerY = (minY + maxY) / 2;
-  console.log("Graph center: ", { centerX, centerY });
+  // console.log("Graph center: ", { centerX, centerY });
 
   // Calculate positions for the dots in the middle of the edges of the red rectangle
   const midTopX = centerX * transform.scale + transform.translateX;
@@ -38,9 +41,6 @@ const BuildGraph = ({
   const midLeftY = centerY * transform.scale + transform.translateY;
   const midRightX = maxX * transform.scale + transform.translateX;
   const midRightY = centerY * transform.scale + transform.translateY;
-
-  console.log("Rendering Graph");
-  console.log("Graph center: ", { centerX, centerY });
 
   return (
     <svg
@@ -78,8 +78,14 @@ const BuildGraph = ({
           key={node.id}
           cx={node.x * transform.scale + transform.translateX}
           cy={node.y * transform.scale + transform.translateY}
-          r={nodeSize * transform.scale} // Adjust radius based on scale
+          r={nodeSize * window.innerWidth * 0.001} // Adjust radius based on scale
           className="node"
+          onMouseEnter={() => {
+            console.log(`Hovering over node: ${node.id}`);
+            setHoveredNodeId(node.id);
+          }}
+          onMouseLeave={() => setHoveredNodeId(null)}
+          fill={hoveredNodeId === node.id ? "red" : "blue"} // Change color on hover
         />
       ))}
       {/* Red rectangle */}

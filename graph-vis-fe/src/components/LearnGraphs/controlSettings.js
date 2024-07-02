@@ -5,7 +5,7 @@ export const defaultControls = {
   NUMBER_OF_EDGES: { value: 50, visible: true },
   OPTIMAL_DISTANCE: { value: 100, visible: false },
   MAX_ITERATIONS: { value: 8000, visible: true },
-  NODE_SIZE: { value: 5, visible: false },
+  NODE_SIZE: { value: 25, visible: true },
 };
 
 export const minMaxValues = {
@@ -13,7 +13,7 @@ export const minMaxValues = {
   NUMBER_OF_EDGES: { min: 1, max: 1000, buttonChangeValue: 5 },
   OPTIMAL_DISTANCE: { min: 1, max: 300, buttonChangeValue: 10 },
   MAX_ITERATIONS: { min: 1, max: 5000, buttonChangeValue: 500 },
-  NODE_SIZE: { min: 1, max: 50, buttonChangeValue: 5 },
+  NODE_SIZE: { min: 5, max: 50, buttonChangeValue: 5 },
 };
 
 export const descriptions = {

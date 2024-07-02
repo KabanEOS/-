@@ -46,7 +46,7 @@ const LearnGraphsControls = ({
         }
         buttonChangeValue={minMaxValues.NUMBER_OF_EDGES.buttonChangeValue}
       />
-      <ControlDrawerUnit
+      {/* <ControlDrawerUnit
         type="numeric"
         name="OPTIMAL_DISTANCE"
         value={optimalDistance}
@@ -55,7 +55,7 @@ const LearnGraphsControls = ({
         description={descriptions.OPTIMAL_DISTANCE}
         onChange={(name, value) => setOptimalDistance(value)}
         buttonChangeValue={minMaxValues.OPTIMAL_DISTANCE.buttonChangeValue}
-      />
+      /> */}
       <ControlDrawerUnit
         type="numeric"
         name="MAX_ITERATIONS"

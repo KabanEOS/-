@@ -10,7 +10,6 @@ import {
 
 const DrawerChildren = () => {
   const { controls, updateControl } = useDrawer();
-  console.log("🚀 ~ DrawerChildren ~ controls:", controls);
 
   return (
     <div className="controls">

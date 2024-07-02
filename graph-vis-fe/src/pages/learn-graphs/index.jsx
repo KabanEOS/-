@@ -34,7 +34,9 @@ const LearnGraphs = () => {
   const [infoMessage, setInfoMessage] = useState(initialInfoMessage);
   const [maxIterations, setMaxIterations] = useState(1000);
   const [optimalDistance, setOptimalDistance] = useState(100);
-  const [nodeSize, setNodeSize] = useState(2);
+  const [nodeSize, setNodeSize] = useState(
+    Math.floor(window.innerWidth * 0.014)
+  );
   const [svgWidth, setSvgWidth] = useState(3000);
   const [svgHeight, setSvgHeight] = useState(3000);
 
@@ -127,7 +129,6 @@ const LearnGraphs = () => {
     });
   };
 
-  console.log("🚀 ~ LearnGraphs ~ connectivity:", connectivity);
   return (
     <div className="show-over-shadow">
       <div className="centralize">
