@@ -11,6 +11,8 @@ export const useAnimation = () => useContext(TraversalAnimationContext);
 export const TraversalAnimationProvider = ({ children }) => {
   const [isTraversalAnimationActive, setTraversalAnimationActive] =
     useState(false);
+  const [isTraversalAnimationComplete, setTraversalAnimationComplete] =
+    useState(false);
   const [traversedNodes, setTraversedNodes] = useState([]);
   const [traversedEdges, setTraversedEdges] = useState([]);
   const [currentNode, setCurrentNode] = useState(null);
@@ -18,35 +20,44 @@ export const TraversalAnimationProvider = ({ children }) => {
   const [graph, setGraph] = useState(null);
   const intervalRef = useRef(null);
 
+  const animationSpeedTransformed = 2000 - animationSpeed * 18;
+
   // Function to start traversal animation
   const startTraversalAnimation = (sequence) => {
+    console.log("Starting traversal animation with sequence:", sequence);
+    setTraversalAnimationComplete(false);
     let index = 0;
     const interval = setInterval(() => {
       if (index >= sequence.length) {
         clearInterval(interval);
         setTraversalAnimationActive(false);
+        setTraversalAnimationComplete(true);
         return;
       }
-      const nodeId = sequence[index];
-      setTraversedNodes((prev) => {
-        const updatedNodes = [...prev, nodeId];
-        console.log("Traversed Nodes: ", updatedNodes);
-        return updatedNodes;
-      });
-      setCurrentNode(nodeId);
-      console.log("Current Node: ", nodeId);
-
-      if (index > 0) {
-        const edgeId = { source: sequence[index - 1], target: nodeId };
-        setTraversedEdges((prev) => {
-          const updatedEdges = [...prev, edgeId];
-          console.log("Traversed Edges: ", updatedEdges);
-          return updatedEdges;
+      const id = sequence[index];
+      if (id !== undefined) {
+        setTraversedNodes((prev) => {
+          const updatedNodes = [...prev, id];
+          console.log("Traversed Nodes: ", updatedNodes);
+          return updatedNodes;
         });
-      }
+        setCurrentNode(id);
+        console.log("Current Node: ", id);
 
+        // Check and add the traversed edge
+        if (index > 0) {
+          setTraversedEdges((prev) => {
+            const edge = { source: sequence[index - 1], target: id };
+            const updatedEdges = [...prev, edge];
+            console.log("Traversed Edges: ", updatedEdges);
+            return updatedEdges;
+          });
+        }
+      } else {
+        console.log("Unknown type in sequence:", id);
+      }
       index += 1;
-    }, 2 * animationSpeed);
+    }, animationSpeedTransformed);
 
     intervalRef.current = interval; // Store interval ID in ref
     setTraversalAnimationActive(true);
@@ -69,7 +80,7 @@ export const TraversalAnimationProvider = ({ children }) => {
         algorithm,
         goalNode
       );
-      console.log("Traversal sequence response:", response);
+      console.log("Traversal sequence received:", response);
       startTraversalAnimation(response);
     } catch (error) {
       console.error("Error generating traversal sequence:", error);
@@ -78,17 +89,21 @@ export const TraversalAnimationProvider = ({ children }) => {
 
   const stopTraversalAnimation = () => {
     setTraversalAnimationActive(false);
+    setTraversalAnimationComplete(false);
     setCurrentNode(null);
     setTraversedNodes([]);
     setTraversedEdges([]);
     clearInterval(intervalRef.current); // Clear interval using ref
   };
 
+  isTraversalAnimationComplete && stopTraversalAnimation();
+
   return (
     <TraversalAnimationContext.Provider
       value={{
         setTraversalAnimationActive,
         isTraversalAnimationActive,
+        isTraversalAnimationComplete,
         traversedNodes,
         traversedEdges,
         currentNode,

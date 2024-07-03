@@ -50,3 +50,22 @@
   stroke-width: 2px;
   filter: drop-shadow(0 0 5px rgba(133, 175, 251, 0.8));
 }
+
+.current-node {
+  fill: #e34bf1;
+  stroke: #ea67f5;
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 5px rgba(234, 103, 245, 0.8));
+}
+
+.traversed-node {
+  fill: #934bf2;
+  stroke: #934bf2;
+  stroke-width: 2px;
+  filter: drop-shadow(0 0 5px rgba(180, 155, 245, 0.8));
+}
+
+.traversed-edge {
+  stroke: #934bf2;
+  filter: drop-shadow(0 0 5px rgba(180, 155, 245, 0.8));
+}

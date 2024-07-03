@@ -12,7 +12,7 @@ export const minMaxValues = {
   NUMBER_OF_NODES: { min: 1, max: 100, buttonChangeValue: 1 },
   NUMBER_OF_EDGES: { min: 1, max: 200, buttonChangeValue: 1 },
   OPTIMAL_DISTANCE: { min: 1, max: 200, buttonChangeValue: 1 },
-  MAX_ITERATIONS: { min: 1, max: 1000, buttonChangeValue: 1 },
+  MAX_ITERATIONS: { min: 1, max: 10000, buttonChangeValue: 1 },
   NODE_SIZE: { min: 1, max: 20, buttonChangeValue: 1 },
   ANIMATION_SPEED: { min: 0, max: 100, buttonChangeValue: 1 }, // New setting
   START_NODE: { min: 0, max: 100, buttonChangeValue: 1 }, // New setting

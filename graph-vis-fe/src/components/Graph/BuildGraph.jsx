@@ -1,7 +1,9 @@
-import React from "react";
+// BuildGraph.jsx
+
+import React, { useEffect } from "react";
 import PropTypes from "prop-types";
 import { useHover } from "../../contexts/HoverContext.jsx";
-
+import { useAnimation } from "../../contexts/TraversalAnimationContext";
 import "./../../styles/buildGraph.styles.scss";
 
 const BuildGraph = ({
@@ -19,6 +21,14 @@ const BuildGraph = ({
     handleMouseEnterConnection,
     handleMouseLeave,
   } = useHover();
+
+  const {
+    traversedNodes,
+    traversedEdges,
+    currentNode,
+    isTraversalAnimationActive,
+    isTraversalAnimationComplete,
+  } = useAnimation();
 
   if (!nodes || !edges) {
     return null;
@@ -80,8 +90,17 @@ const BuildGraph = ({
     return `gradient-default-${edge.source}-${edge.target}`;
   };
 
-  // Get edge class based on remoteness level
+  // Get edge class based on remoteness level and traversal
   const getEdgeClass = (edge) => {
+    if (isTraversalAnimationComplete || isTraversalAnimationActive) {
+      if (
+        traversedEdges.some(
+          (e) => e.source === edge.source && e.target === edge.target
+        )
+      ) {
+        return "traversed-edge";
+      }
+    }
     const sourceLevel = remotenessLevels[edge.source];
     const targetLevel = remotenessLevels[edge.target];
 
@@ -100,8 +119,16 @@ const BuildGraph = ({
     return "";
   };
 
-  // Get node class based on remoteness level
+  // Get node class based on remoteness level and traversal
   const getNodeClass = (node) => {
+    if (isTraversalAnimationComplete || isTraversalAnimationActive) {
+      if (currentNode === node.id) {
+        return "current-node";
+      }
+      if (traversedNodes.includes(node.id)) {
+        return "traversed-node";
+      }
+    }
     const nodeLevel = remotenessLevels[node.id];
 
     if (
