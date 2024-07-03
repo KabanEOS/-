@@ -37,12 +37,22 @@ const LearnGraphs = () => {
   const [optimalDistance, setOptimalDistance] = useState(100);
 
   // ADJUST initial node size in build graph
-  const [nodeSize, setNodeSize] = useState(
-    Math.floor(
+
+  const calculateNodeSize = (numNodes) => {
+    const baseSize =
       window.innerWidth < 1400
         ? window.innerWidth * 0.02
-        : window.innerWidth * 0.006
-    )
+        : window.innerWidth * 0.006;
+    const scalingFactor = Math.max(1, Math.log(numNodes) / 2); // Adjust the denominator to control the scaling sensitivity
+    return Math.floor(baseSize / scalingFactor);
+  };
+
+  useEffect(() => {
+    setNodeSize(calculateNodeSize(graphData.nodes.length));
+  }, [graphData]);
+
+  const [nodeSize, setNodeSize] = useState(
+    calculateNodeSize(graphData.nodes.length)
   );
   const [svgWidth, setSvgWidth] = useState(3000);
   const [svgHeight, setSvgHeight] = useState(3000);
@@ -178,7 +188,7 @@ const LearnGraphs = () => {
           setNodeSize={setNodeSize}
           connectivity={connectivity}
           handleConnectivityChange={handleConnectivityChange}
-          fetchAndGenerateGraph={() =>
+          fetchAndGenerateGraph={() => {
             fetchAndGenerateGraph(
               numNodes,
               numEdges,
@@ -192,8 +202,9 @@ const LearnGraphs = () => {
               maxIterations,
               optimalDistance,
               setGraphFormats // Pass the setGraphFormats callback
-            )
-          }
+            );
+            stopTraversalAnimation();
+          }}
           infoMessage={infoMessage}
           error={error}
           algorithm={algorithm}
