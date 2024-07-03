@@ -65,6 +65,8 @@ const LearnGraphs = () => {
   const [startNode, setStartNode] = useState(1);
   const [goalNode, setGoalNode] = useState(null);
   const {
+    setTraversalAnimationActive,
+    isTraversalAnimationActive,
     setGraph,
     animationSpeed,
     setAnimationSpeed,
@@ -193,6 +195,8 @@ const LearnGraphs = () => {
           handleTraversal={handleTraversal}
           animationSpeed={animationSpeed}
           setAnimationSpeed={setAnimationSpeed}
+          setTraversalAnimationActive={setTraversalAnimationActive}
+          isTraversalAnimationActive={isTraversalAnimationActive}
         />
       </ControlDrawer>
       <LearnGraphsGraph

@@ -28,6 +28,8 @@ const LearnGraphsControls = ({
   handleTraversal,
   animationSpeed,
   setAnimationSpeed,
+  isTraversalAnimationActive,
+  setTraversalAnimationActive,
 }) => {
   return (
     <div className="units-wrapper">
@@ -71,7 +73,12 @@ const LearnGraphsControls = ({
         onChange={(name, value) => setAnimationSpeed(value)}
         buttonChangeValue={minMaxValues.ANIMATION_SPEED.buttonChangeValue}
       />
-      <ButtonControl onClick={handleTraversal} label="Start Traversal" />
+      <ButtonControl
+        onClick={() => setTraversalAnimationActive(!isTraversalAnimationActive)}
+        label={
+          isTraversalAnimationActive ? "Stop Traversal" : "Start Traversal"
+        }
+      />
       <ControlDrawerUnit
         type="numeric"
         name="NUMBER_OF_NODES"
@@ -136,10 +143,6 @@ const LearnGraphsControls = ({
           handleConnectivityChange({ target: { name, value } })
         }
       />
-      <ButtonControl
-        onClick={fetchAndGenerateGraph}
-        label="Generate Random Graph"
-      />
       {error && <p style={{ color: "red" }}>{error}</p>}
       {infoMessage && (
         <p
@@ -147,6 +150,10 @@ const LearnGraphsControls = ({
           dangerouslySetInnerHTML={{ __html: infoMessage }}
         ></p>
       )}
+      <ButtonControl
+        onClick={fetchAndGenerateGraph}
+        label="Generate Random Graph"
+      />
     </div>
   );
 };

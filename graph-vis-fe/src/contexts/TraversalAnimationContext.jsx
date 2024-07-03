@@ -9,6 +9,8 @@ export const useAnimation = () => useContext(TraversalAnimationContext);
 
 // Animation provider component
 export const TraversalAnimationProvider = ({ children }) => {
+  const [isTraversalAnimationActive, setTraversalAnimationActive] =
+    useState(false);
   const [traversedNodes, setTraversedNodes] = useState([]);
   const [traversedEdges, setTraversedEdges] = useState([]);
   const [currentNode, setCurrentNode] = useState(null);
@@ -64,6 +66,8 @@ export const TraversalAnimationProvider = ({ children }) => {
   return (
     <TraversalAnimationContext.Provider
       value={{
+        setTraversalAnimationActive,
+        isTraversalAnimationActive,
         traversedNodes,
         traversedEdges,
         currentNode,
