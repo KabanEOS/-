@@ -1,6 +1,6 @@
 import React from "react";
 import ControlDrawerUnit from "./../../components/ControlDrawer/ControlDrawerUnit";
-import { defaultControls, minMaxValues, descriptions } from "./controlSettings";
+import { minMaxValues, descriptions, algorithmsList } from "./controlSettings";
 import ButtonControl from "../ButtonControl";
 
 const LearnGraphsControls = ({
@@ -19,9 +19,59 @@ const LearnGraphsControls = ({
   fetchAndGenerateGraph,
   infoMessage,
   error,
+  algorithm,
+  setAlgorithm,
+  startNode,
+  setStartNode,
+  goalNode,
+  setGoalNode,
+  handleTraversal,
+  animationSpeed,
+  setAnimationSpeed,
 }) => {
   return (
     <div className="units-wrapper">
+      <ControlDrawerUnit
+        type="dropdown"
+        name="ALGORITHM"
+        value={algorithm}
+        options={algorithmsList}
+        description="Selects the traversal algorithm."
+        onChange={(name, value) => setAlgorithm(value)}
+      />
+      <ControlDrawerUnit
+        type="numeric"
+        name="START_NODE"
+        value={startNode}
+        min={minMaxValues.START_NODE.min}
+        max={minMaxValues.START_NODE.max}
+        description={descriptions.START_NODE}
+        onChange={(name, value) => setStartNode(value)}
+        buttonChangeValue={minMaxValues.START_NODE.buttonChangeValue}
+      />
+      {(algorithm === "a_star" || algorithm === "min_cut_max_flow") && (
+        <ControlDrawerUnit
+          type="numeric"
+          name="GOAL_NODE"
+          value={goalNode}
+          min={minMaxValues.GOAL_NODE.min}
+          max={minMaxValues.GOAL_NODE.max}
+          description={descriptions.GOAL_NODE}
+          onChange={(name, value) => setGoalNode(value)}
+          buttonChangeValue={minMaxValues.GOAL_NODE.buttonChangeValue}
+        />
+      )}
+      <ControlDrawerUnit
+        type="numeric"
+        name="ANIMATION_SPEED"
+        value={animationSpeed}
+        min={minMaxValues.ANIMATION_SPEED.min}
+        max={minMaxValues.ANIMATION_SPEED.max}
+        description={descriptions.ANIMATION_SPEED}
+        onChange={(name, value) => setAnimationSpeed(value)}
+        buttonChangeValue={minMaxValues.ANIMATION_SPEED.buttonChangeValue}
+      />
+      <ButtonControl onClick={handleTraversal} label="Start Traversal" />
       <ControlDrawerUnit
         type="numeric"
         name="NUMBER_OF_NODES"

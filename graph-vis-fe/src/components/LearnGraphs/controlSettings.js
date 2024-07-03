@@ -9,19 +9,25 @@ export const defaultControls = {
 };
 
 export const minMaxValues = {
-  NUMBER_OF_NODES: { min: 1, max: 1000, buttonChangeValue: 5 },
-  NUMBER_OF_EDGES: { min: 1, max: 1000, buttonChangeValue: 5 },
-  OPTIMAL_DISTANCE: { min: 1, max: 1000, buttonChangeValue: 50 },
-  MAX_ITERATIONS: { min: 1, max: 16000, buttonChangeValue: 500 },
-  NODE_SIZE: { min: 5, max: 50, buttonChangeValue: 1 },
+  NUMBER_OF_NODES: { min: 1, max: 100, buttonChangeValue: 1 },
+  NUMBER_OF_EDGES: { min: 1, max: 200, buttonChangeValue: 1 },
+  OPTIMAL_DISTANCE: { min: 1, max: 200, buttonChangeValue: 1 },
+  MAX_ITERATIONS: { min: 1, max: 1000, buttonChangeValue: 1 },
+  NODE_SIZE: { min: 1, max: 20, buttonChangeValue: 1 },
+  ANIMATION_SPEED: { min: 0, max: 100, buttonChangeValue: 1 }, // New setting
+  START_NODE: { min: 0, max: 100, buttonChangeValue: 1 }, // New setting
+  GOAL_NODE: { min: 0, max: 100, buttonChangeValue: 1 }, // New setting
 };
 
 export const descriptions = {
-  NUMBER_OF_NODES: "Sets the number of nodes in the graph.",
-  NUMBER_OF_EDGES: "Sets the number of edges in the graph.",
-  OPTIMAL_DISTANCE:
-    "Sets the ideal distance between nodes in the graph. It influences the repulsive and attractive forces applied during the layout algorithm.",
-  MAX_ITERATIONS:
-    "Sets the maximum number of iterations the graph algorithm will perform. More iterations can lead to a more stable and visually pleasing layout but will take longer to compute.",
-  NODE_SIZE: "Sets the size of the nodes.",
+  NUMBER_OF_NODES: "The number of nodes in the graph.",
+  NUMBER_OF_EDGES: "The number of edges in the graph.",
+  OPTIMAL_DISTANCE: "The optimal distance between nodes.",
+  MAX_ITERATIONS: "The maximum number of iterations for layout.",
+  NODE_SIZE: "The size of the nodes.",
+  ANIMATION_SPEED: "The speed of the traversal animation.",
+  START_NODE: "The starting node for traversal.",
+  GOAL_NODE: "The goal node for traversal (if applicable).",
 };
+
+export const algorithmsList = ["bfs", "dfs", "dijkstra", "a_star"];

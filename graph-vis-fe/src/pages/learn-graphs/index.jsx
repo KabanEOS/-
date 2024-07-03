@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import LearnGraphsControls from "./../../components/LearnGraphs/LearnGraphsControls";
 import LearnGraphsGraph from "./../../components/LearnGraphs/LearnGraphsGraph";
 import LearnGraphFormats from "./../../components/LearnGraphs/LearnGraphFormats.jsx";
@@ -10,6 +10,7 @@ import {
 import "../../styles/shared.styles.scss";
 import "../../styles/learnGraph.styles.scss";
 import ControlDrawer from "../../components/ControlDrawer/ControlDrawer";
+import { useAnimation } from "../../contexts/TraversalAnimationContext"; // Import the custom hook
 
 const LearnGraphs = () => {
   const initialNodesAmount = [18, 24];
@@ -29,6 +30,7 @@ const LearnGraphs = () => {
     validateGraphParameters(numNodes, initialEdges, connectivity);
 
   const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
+  console.log("🚀 ~ LearnGraphs ~ graphData:", graphData);
   const [graphFormats, setGraphFormats] = useState({});
   const [error, setError] = useState(null);
   const [numEdges, setNumEdges] = useState(initialNumEdges);
@@ -53,6 +55,22 @@ const LearnGraphs = () => {
     translateY: 0,
   });
 
+  const handleTraversal = () => {
+    requestAndStartTraversal(graphData, startNode, algorithm, goalNode);
+  };
+
+  // New states for traversal algorithm
+  const [algorithm, setAlgorithm] = useState("bfs");
+  console.log("🚀 ~ LearnGraphs ~ algorithm:", algorithm);
+  const [startNode, setStartNode] = useState(1);
+  const [goalNode, setGoalNode] = useState(null);
+  const {
+    setGraph,
+    animationSpeed,
+    setAnimationSpeed,
+    requestAndStartTraversal,
+  } = useAnimation();
+
   useEffect(() => {
     fetchAndGenerateGraph(
       numNodes,
@@ -68,6 +86,8 @@ const LearnGraphs = () => {
       optimalDistance,
       setGraphFormats // Pass the setGraphFormats callback
     );
+
+    setGraph(graphData);
   }, [numNodes, numEdges, maxIterations, optimalDistance, connectivity]);
 
   const handleNumNodesChange = (e) => {
@@ -164,6 +184,15 @@ const LearnGraphs = () => {
           }
           infoMessage={infoMessage}
           error={error}
+          algorithm={algorithm}
+          setAlgorithm={setAlgorithm}
+          startNode={startNode}
+          setStartNode={setStartNode}
+          goalNode={goalNode}
+          setGoalNode={setGoalNode}
+          handleTraversal={handleTraversal}
+          animationSpeed={animationSpeed}
+          setAnimationSpeed={setAnimationSpeed}
         />
       </ControlDrawer>
       <LearnGraphsGraph

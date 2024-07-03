@@ -14,6 +14,7 @@ import Signature from "./components/Signature.jsx";
 import { ControlDrawerProvider } from "./contexts/ControlDrawerContext.jsx";
 import ControlDrawer from "./components/ControlDrawer/ControlDrawer.jsx";
 import { HoverProvider } from "./contexts/HoverContext.jsx";
+import { TraversalAnimationProvider } from "./contexts/TraversalAnimationContext.jsx";
 const App = () => {
   const nodes = [
     { id: 1, name: "Graph Builder", link: "/graph-builder" },
@@ -44,9 +45,11 @@ const App = () => {
 
 const AppWrapper = () => (
   <Router>
-    <HoverProvider>
-      <App />
-    </HoverProvider>
+    <TraversalAnimationProvider>
+      <HoverProvider>
+        <App />
+      </HoverProvider>
+    </TraversalAnimationProvider>
   </Router>
 );
 
