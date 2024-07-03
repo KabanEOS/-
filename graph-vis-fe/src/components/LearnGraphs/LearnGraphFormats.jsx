@@ -269,7 +269,7 @@ const LearnGraphFormats = ({ graphFormats }) => {
             {graphmlLines.map(({ line, isHighlighted }, index) => (
               <span
                 key={index}
-                className={isHighlighted ? "highlight" : ""}
+                className={(index !== 0) & isHighlighted ? "highlight" : ""}
                 onMouseEnter={() => handleMouseEnterNodeOrConnection(line)}
                 onMouseLeave={handleMouseLeave}
               >

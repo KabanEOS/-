@@ -6,7 +6,7 @@ import {
   validateGraphParameters,
   fetchAndGenerateGraph,
   centerGraph,
-} from "./../../components/LearnGraphs/utils";
+} from "../../components/LearnGraphs/LearnGraph.utils";
 import "../../styles/shared.styles.scss";
 import "../../styles/learnGraph.styles.scss";
 import ControlDrawer from "../../components/ControlDrawer/ControlDrawer";
@@ -131,7 +131,7 @@ const LearnGraphs = () => {
         onToggle={undefined}
         isInitiallyOpen={true}
         isHomeButtonShowed={true}
-        maxWidth={"250px"}
+        maxWidth={"20%"}
       >
         <LearnGraphsControls
           numNodes={numNodes}

@@ -2,6 +2,8 @@ import axios from "axios";
 
 const API_URL = "http://127.0.0.1:5001";
 
+// it's legacy actually but I will hold it to show the path
+
 export const getBfsTraversal = async (graph) => {
   const response = await axios.post(`${API_URL}/traversal/bfs`, graph);
   return response.data;
@@ -35,5 +37,20 @@ export const generateRandomBuildGraph = async (
     additional_params: additionalParams,
   });
   console.log("🚀 ~ response:", response);
+  return response.data;
+};
+
+export const generateTraversalSequence = async (
+  graph,
+  startNode,
+  algorithm,
+  goalNode = null
+) => {
+  const response = await axios.post(`${API_URL}/traversal`, {
+    graph: graph,
+    start_node: startNode,
+    algorithm: algorithm,
+    goal_node: goalNode,
+  });
   return response.data;
 };
