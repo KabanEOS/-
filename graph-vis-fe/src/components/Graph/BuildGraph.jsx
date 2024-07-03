@@ -58,6 +58,15 @@ const BuildGraph = ({
     const sourceLevel = remotenessLevels[edge.source];
     const targetLevel = remotenessLevels[edge.target];
 
+    if (
+      hoveredConnection &&
+      ((hoveredConnection.source === edge.source.toString() &&
+        hoveredConnection.target === edge.target.toString()) ||
+        (hoveredConnection.source === edge.target.toString() &&
+          hoveredConnection.target === edge.source.toString()))
+    ) {
+      return `gradient-red-${edge.source}-${edge.target}`;
+    }
     if (sourceLevel === 0 || targetLevel === 0) {
       return `gradient-red-to-semi-${edge.source}-${edge.target}`;
     }
@@ -74,8 +83,10 @@ const BuildGraph = ({
 
     if (
       hoveredConnection &&
-      hoveredConnection.source === edge.source.toString() &&
-      hoveredConnection.target === edge.target.toString()
+      ((hoveredConnection.source === edge.source.toString() &&
+        hoveredConnection.target === edge.target.toString()) ||
+        (hoveredConnection.source === edge.target.toString() &&
+          hoveredConnection.target === edge.source.toString()))
     ) {
       return "hovered-edge-1";
     }
@@ -191,6 +202,7 @@ const BuildGraph = ({
       {edges.map((edge, index) => {
         const sourceNode = nodes.find((node) => node.id === edge.source);
         const targetNode = nodes.find((node) => node.id === edge.target);
+
         if (
           !sourceNode ||
           !targetNode ||
@@ -212,8 +224,8 @@ const BuildGraph = ({
             stroke={`url(#${getEdgeGradientId(edge)})`}
             onMouseEnter={() =>
               handleMouseEnterConnection({
-                source: edge.source.toString(),
-                target: edge.target.toString(),
+                source: Math.min(edge.source, edge.target).toString(),
+                target: Math.max(edge.source, edge.target).toString(),
               })
             }
             onMouseLeave={handleMouseLeave}

@@ -1,31 +1,32 @@
-// src/context/HoverContext.js
-import React, { createContext, useContext, useState, useCallback } from "react";
+import React, { createContext, useContext, useState } from "react";
 
 const HoverContext = createContext();
 
+export const useHover = () => useContext(HoverContext);
+
 export const HoverProvider = ({ children }) => {
   const [hoveredNode, setHoveredNode] = useState(null);
+  console.log("🚀 ~ HoverProvider ~ hoveredNode:", hoveredNode);
   const [hoveredConnection, setHoveredConnection] = useState(null);
+  console.log("🚀 ~ HoverProvider ~ hoveredConnection:", hoveredConnection);
 
-  const handleMouseEnterNode = useCallback((node) => {
+  const handleMouseEnterNode = (node) => {
     setHoveredNode(node.toString());
     setHoveredConnection(null);
-  }, []);
+  };
 
-  const handleMouseEnterConnection = useCallback((connection) => {
-    if (connection && connection.source && connection.target) {
-      setHoveredConnection({
-        source: connection.source.toString(),
-        target: connection.target.toString(),
-      });
-      setHoveredNode(null);
-    }
-  }, []);
+  const handleMouseEnterConnection = (connection) => {
+    setHoveredConnection({
+      source: connection.source.toString(),
+      target: connection.target.toString(),
+    });
+    setHoveredNode(null);
+  };
 
-  const handleMouseLeave = useCallback(() => {
+  const handleMouseLeave = () => {
     setHoveredNode(null);
     setHoveredConnection(null);
-  }, []);
+  };
 
   return (
     <HoverContext.Provider
@@ -41,5 +42,3 @@ export const HoverProvider = ({ children }) => {
     </HoverContext.Provider>
   );
 };
-
-export const useHover = () => useContext(HoverContext);

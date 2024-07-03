@@ -1,5 +1,4 @@
-// src/components/LearnGraphs/LearnGraphFormats.jsx
-import React, { useMemo, useState, useCallback } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import "../../styles/learnGraph.styles.scss";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { CSSTransition } from "react-transition-group";
@@ -13,6 +12,7 @@ const LearnGraphFormats = ({ graphFormats }) => {
     handleMouseEnterConnection,
     handleMouseLeave,
   } = useHover();
+
   const [openSections, setOpenSections] = useState({
     adjacencyList: true,
     adjacencyMatrix: true,
@@ -25,90 +25,63 @@ const LearnGraphFormats = ({ graphFormats }) => {
     ? graphFormats.adjacency_matrix.length
     : 0;
 
-  const isNodeHovered = useCallback(
-    (node) => node.toString() === hoveredNode,
-    [hoveredNode]
-  );
+  const toggleSection = (section) => {
+    setOpenSections((prevState) => ({
+      ...prevState,
+      [section]: !prevState[section],
+    }));
+  };
 
-  const isConnectionHovered = useCallback(
-    (connection) =>
+  const isNodeHovered = (node) => {
+    return node.toString() === hoveredNode;
+  };
+
+  const isConnectionHovered = (connection) => {
+    return (
       hoveredConnection &&
       hoveredConnection.source === connection.source.toString() &&
-      hoveredConnection.target === connection.target.toString(),
-    [hoveredConnection]
-  );
+      hoveredConnection.target === connection.target.toString()
+    );
+  };
 
-  const highlightLine = (line, node, connection) => {
-    if (node !== null) {
-      return new RegExp(`\\b${node}\\b`).test(line);
+  const processText = (text) => {
+    if (!text) return [];
+    return text.split("\n").map((line) => line.trim());
+  };
+
+  const highlightLine = (line) => {
+    if (hoveredNode) {
+      return new RegExp(`\\b${hoveredNode}\\b`).test(line);
     }
-    if (connection !== null) {
+    if (hoveredConnection) {
       return (
-        new RegExp(`\\b${connection.source}\\b`).test(line) &&
-        new RegExp(`\\b${connection.target}\\b`).test(line)
+        new RegExp(`\\b${hoveredConnection.source}\\b`).test(line) &&
+        new RegExp(`\\b${hoveredConnection.target}\\b`).test(line)
       );
     }
     return false;
   };
 
-  const processText = useCallback((text) => {
-    if (!text) return [];
-    return text.split("\n").map((line) => line.trim());
-  }, []);
-
-  const highlightText = (lines, node, connection) => {
+  const highlightText = (lines) => {
     return lines.map((line) => ({
       line,
-      isHighlighted: highlightLine(line, node, connection),
+      isHighlighted: highlightLine(line),
     }));
   };
 
   const dotLines = useMemo(
-    () =>
-      highlightText(
-        processText(graphFormats.dot),
-        hoveredNode,
-        hoveredConnection
-      ),
-    [
-      graphFormats.dot,
-      hoveredNode,
-      hoveredConnection,
-      processText,
-      highlightText,
-    ]
+    () => highlightText(processText(graphFormats.dot)),
+    [graphFormats.dot, hoveredNode, hoveredConnection]
   );
 
   const gmlLines = useMemo(
-    () =>
-      highlightText(
-        processText(graphFormats.gml),
-        hoveredNode,
-        hoveredConnection
-      ),
-    [
-      graphFormats.gml,
-      hoveredNode,
-      hoveredConnection,
-      processText,
-      highlightText,
-    ]
+    () => highlightText(processText(graphFormats.gml)),
+    [graphFormats.gml, hoveredNode, hoveredConnection]
   );
 
   const graphmlLines = useMemo(
-    () =>
-      highlightText(
-        processText(graphFormats.graphml),
-        hoveredNode,
-        hoveredConnection
-      ),
-    [
-      graphFormats.graphml,
-      hoveredNode,
-      hoveredConnection,
-      processText,
-      highlightText,
-    ]
+    () => highlightText(processText(graphFormats.graphml)),
+    [graphFormats.graphml, hoveredNode, hoveredConnection]
   );
 
   const handleMatrixMouseEnter = useCallback((rowIndex, cellIndex) => {
@@ -128,13 +101,6 @@ const LearnGraphFormats = ({ graphFormats }) => {
         handleMouseEnterNode(match[1]);
       }
     }
-  };
-
-  const toggleSection = (section) => {
-    setOpenSections((prevState) => ({
-      ...prevState,
-      [section]: !prevState[section],
-    }));
   };
 
   return (
@@ -324,16 +290,12 @@ const parseDotLine = (line) => {
 };
 
 const parseGmlLine = (line) => {
-  const match = line.match(/source\s+(\d+)\s+target\s+(\d+)/);
-  if (match) {
-    return { source: match[1], target: match[2] };
-  }
-
-  const nodeMatch = line.match(/id\s+(\d+)/);
+  const nodeMatch = line.match(/id (\d+)/);
   if (nodeMatch) {
     return { node: nodeMatch[1] };
   }
-  return null;
+  const edgeMatch = line.match(/source (\d+)\s*target (\d+)/);
+  return edgeMatch ? { source: edgeMatch[1], target: edgeMatch[2] } : null;
 };
 
 const parseGraphmlLine = (line) => {
