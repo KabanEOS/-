@@ -43,7 +43,7 @@ const LearnGraphs = () => {
       window.innerWidth < 1400
         ? window.innerWidth * 0.02
         : window.innerWidth * 0.006;
-    const scalingFactor = Math.max(1, Math.log(numNodes) / 2); // Adjust the denominator to control the scaling sensitivity
+    const scalingFactor = Math.max(1, Math.log(numNodes) / 4); // Adjust the denominator to control the scaling sensitivity
     return Math.floor(baseSize / scalingFactor);
   };
 
@@ -54,8 +54,8 @@ const LearnGraphs = () => {
   const [nodeSize, setNodeSize] = useState(
     calculateNodeSize(graphData.nodes.length)
   );
-  const [svgWidth, setSvgWidth] = useState(3000);
-  const [svgHeight, setSvgHeight] = useState(3000);
+  const [svgWidth, setSvgWidth] = useState(5000);
+  const [svgHeight, setSvgHeight] = useState(5000);
 
   const [transform, setTransform] = useState({
     scale: 1,

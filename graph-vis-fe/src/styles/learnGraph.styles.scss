@@ -51,6 +51,14 @@
       padding: 6px;
       border-radius: 3px;
       word-break: break-word;
+
+      &.current {
+        background-color: #ea67f5 !important;
+      }
+
+      &.traversed {
+        background-color: #934bf2a5 !important;
+      }
     }
 
     .matrix-container {
@@ -66,6 +74,14 @@
       display: flex;
       align-items: center;
       border-bottom: 1px solid #555;
+
+      &.current {
+        background-color: #ea67f5 !important;
+      }
+
+      &.traversed {
+        background-color: #934bf2a5 !important;
+      }
 
       &:first-child {
         border-bottom: none;
@@ -126,7 +142,7 @@
   }
 
   .highlight {
-    background-color: #fb6161;
+    background-color: #fb6161 !important;
   }
 
   .hovered {

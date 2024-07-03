@@ -3,6 +3,7 @@ import "../../styles/learnGraph.styles.scss";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { CSSTransition } from "react-transition-group";
 import { useHover } from "../../contexts/HoverContext.jsx";
+import { useAnimation } from "../../contexts/TraversalAnimationContext";
 
 const LearnGraphFormats = ({ graphFormats }) => {
   const {
@@ -12,6 +13,13 @@ const LearnGraphFormats = ({ graphFormats }) => {
     handleMouseEnterConnection,
     handleMouseLeave,
   } = useHover();
+
+  const {
+    traversedNodes,
+    currentNode,
+    isTraversalAnimationActive,
+    isTraversalAnimationComplete,
+  } = useAnimation();
 
   const [openSections, setOpenSections] = useState({
     adjacencyList: true,
@@ -44,6 +52,16 @@ const LearnGraphFormats = ({ graphFormats }) => {
     );
   };
 
+  const isNodeCurrentOrTraversed = (node) => {
+    if (node === currentNode) {
+      return "current";
+    }
+    if (traversedNodes.includes(node)) {
+      return "traversed";
+    }
+    return "";
+  };
+
   const processText = (text) => {
     if (!text) return [];
     return text.split("\n").map((line) => line.trim());
@@ -59,6 +77,15 @@ const LearnGraphFormats = ({ graphFormats }) => {
         new RegExp(`\\b${hoveredConnection.target}\\b`).test(line)
       );
     }
+    if (currentNode && line.includes(currentNode.toString())) {
+      return true;
+    }
+    if (
+      traversedNodes &&
+      traversedNodes.some((node) => line.includes(node.toString()))
+    ) {
+      return true;
+    }
     return false;
   };
 
@@ -71,28 +98,50 @@ const LearnGraphFormats = ({ graphFormats }) => {
 
   const dotLines = useMemo(
     () => highlightText(processText(graphFormats.dot)),
-    [graphFormats.dot, hoveredNode, hoveredConnection]
+    [
+      graphFormats.dot,
+      hoveredNode,
+      hoveredConnection,
+      currentNode,
+      traversedNodes,
+    ]
   );
 
   const gmlLines = useMemo(
     () => highlightText(processText(graphFormats.gml)),
-    [graphFormats.gml, hoveredNode, hoveredConnection]
+    [
+      graphFormats.gml,
+      hoveredNode,
+      hoveredConnection,
+      currentNode,
+      traversedNodes,
+    ]
   );
 
   const graphmlLines = useMemo(
     () => highlightText(processText(graphFormats.graphml)),
-    [graphFormats.graphml, hoveredNode, hoveredConnection]
+    [
+      graphFormats.graphml,
+      hoveredNode,
+      hoveredConnection,
+      currentNode,
+      traversedNodes,
+    ]
   );
 
-  const handleMatrixMouseEnter = useCallback((rowIndex, cellIndex) => {
-    handleMouseEnterConnection({
-      source: rowIndex.toString(),
-      target: cellIndex.toString(),
-    });
-  }, []);
+  const handleMatrixMouseEnter = useCallback(
+    (rowIndex, cellIndex) => {
+      handleMouseEnterConnection({
+        source: rowIndex.toString(),
+        target: cellIndex.toString(),
+      });
+    },
+    [handleMouseEnterConnection]
+  );
 
   const handleMouseEnterNodeOrConnection = (line) => {
-    const connection = parseGmlLine(line) || parseGraphmlLine(line);
+    const connection =
+      parseGmlLine(line) || parseGraphmlLine(line) || parseDotLine(line);
     if (connection) {
       handleMouseEnterConnection(connection);
     } else {
@@ -124,7 +173,9 @@ const LearnGraphFormats = ({ graphFormats }) => {
                 ([node, edges], index) => (
                   <div
                     key={index}
-                    className={`grid-item ${isNodeHovered(node) ? "hovered" : ""}`}
+                    className={`grid-item ${isNodeHovered(node) ? "hovered" : ""} ${isNodeCurrentOrTraversed(
+                      Number(node)
+                    )}`}
                     onMouseEnter={() => handleMouseEnterNode(node)}
                     onMouseLeave={handleMouseLeave}
                   >
@@ -132,7 +183,11 @@ const LearnGraphFormats = ({ graphFormats }) => {
                     {edges.map((edge) => (
                       <span
                         key={edge}
-                        className={`edge-item ${isConnectionHovered({ source: node, target: edge }) ? "hovered" : ""}`}
+                        className={`edge-item ${
+                          isConnectionHovered({ source: node, target: edge })
+                            ? "hovered"
+                            : ""
+                        }`}
                         onMouseEnter={() =>
                           handleMouseEnterConnection({
                             source: node,
@@ -175,7 +230,9 @@ const LearnGraphFormats = ({ graphFormats }) => {
               graphFormats.adjacency_matrix.map((row, rowIndex) => (
                 <div
                   key={rowIndex}
-                  className={`matrix-row ${isNodeHovered(rowIndex) ? "hovered" : ""}`}
+                  className={`matrix-row ${
+                    isNodeHovered(rowIndex) ? "hovered" : ""
+                  } ${isNodeCurrentOrTraversed(rowIndex)}`}
                   onMouseEnter={() => handleMouseEnterNode(rowIndex)}
                   onMouseLeave={handleMouseLeave}
                 >
@@ -183,7 +240,14 @@ const LearnGraphFormats = ({ graphFormats }) => {
                   {row.map((cell, cellIndex) => (
                     <div
                       key={cellIndex}
-                      className={`matrix-cell ${isConnectionHovered({ source: rowIndex, target: cellIndex }) ? "hovered" : ""}`}
+                      className={`matrix-cell ${
+                        isConnectionHovered({
+                          source: rowIndex,
+                          target: cellIndex,
+                        })
+                          ? "hovered"
+                          : ""
+                      }`}
                       onMouseEnter={() =>
                         handleMatrixMouseEnter(rowIndex, cellIndex)
                       }
@@ -213,10 +277,14 @@ const LearnGraphFormats = ({ graphFormats }) => {
             {dotLines.map(({ line, isHighlighted }, index) => (
               <span
                 key={index}
-                className={isHighlighted ? "highlight" : ""}
-                onMouseEnter={() =>
-                  handleMouseEnterConnection(parseDotLine(line))
-                }
+                className={`${
+                  isHighlighted && !isTraversalAnimationActive
+                    ? "highlight"
+                    : ""
+                } ${
+                  isHighlighted && isTraversalAnimationActive ? "traversed" : ""
+                }`}
+                onMouseEnter={() => handleMouseEnterNodeOrConnection(line)}
                 onMouseLeave={handleMouseLeave}
               >
                 {line}
@@ -242,7 +310,13 @@ const LearnGraphFormats = ({ graphFormats }) => {
             {gmlLines.map(({ line, isHighlighted }, index) => (
               <span
                 key={index}
-                className={isHighlighted ? "highlight" : ""}
+                className={`${
+                  isHighlighted && !isTraversalAnimationActive
+                    ? "highlight"
+                    : ""
+                } ${
+                  isHighlighted && isTraversalAnimationActive ? "traversed" : ""
+                }`}
                 onMouseEnter={() => handleMouseEnterNodeOrConnection(line)}
                 onMouseLeave={handleMouseLeave}
               >
@@ -269,7 +343,13 @@ const LearnGraphFormats = ({ graphFormats }) => {
             {graphmlLines.map(({ line, isHighlighted }, index) => (
               <span
                 key={index}
-                className={(index !== 0) & isHighlighted ? "highlight" : ""}
+                className={`${
+                  isHighlighted && !isTraversalAnimationActive
+                    ? "highlight"
+                    : ""
+                } ${
+                  isHighlighted && isTraversalAnimationActive ? "traversed" : ""
+                }`}
                 onMouseEnter={() => handleMouseEnterNodeOrConnection(line)}
                 onMouseLeave={handleMouseLeave}
               >
