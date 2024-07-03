@@ -1,118 +1,328 @@
-import React, { useState } from "react";
+import React, { useState, useMemo, useCallback } from "react";
 import "../../styles/learnGraph.styles.scss";
+import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 
 const LearnGraphFormats = ({ graphFormats }) => {
   const [hoveredNode, setHoveredNode] = useState(null);
   console.log("🚀 ~ LearnGraphFormats ~ hoveredNode:", hoveredNode);
+  const [hoveredConnection, setHoveredConnection] = useState(null);
+  console.log("🚀 ~ LearnGraphFormats ~ hoveredConnection:", hoveredConnection);
+  const [openSections, setOpenSections] = useState({
+    adjacencyList: true,
+    adjacencyMatrix: true,
+    dotFormat: true,
+    gmlFormat: true,
+    graphmlFormat: true,
+  });
+
   const matrixSize = graphFormats.adjacency_matrix
     ? graphFormats.adjacency_matrix.length
     : 0;
 
-  const handleMouseEnter = (node) => {
+  const handleMouseEnterNode = (node) => {
     setHoveredNode(node.toString());
+    setHoveredConnection(null);
+  };
+
+  const handleMouseEnterConnection = (connection) => {
+    setHoveredConnection({
+      source: connection.source.toString(),
+      target: connection.target.toString(),
+    });
+    setHoveredNode(null);
   };
 
   const handleMouseLeave = () => {
     setHoveredNode(null);
+    setHoveredConnection(null);
   };
 
-  const isNodeHovered = (node) => {
-    return node.toString() === hoveredNode;
+  const isNodeHovered = useCallback(
+    (node) => node.toString() === hoveredNode,
+    [hoveredNode]
+  );
+
+  const isConnectionHovered = useCallback(
+    (connection) =>
+      hoveredConnection &&
+      hoveredConnection.source === connection.source.toString() &&
+      hoveredConnection.target === connection.target.toString(),
+    [hoveredConnection]
+  );
+
+  const highlightLine = (line, node, connection) => {
+    if (node !== null) {
+      return new RegExp(`\\b${node}\\b`).test(line);
+    }
+    if (connection !== null) {
+      return (
+        new RegExp(`\\b${connection.source}\\b`).test(line) &&
+        new RegExp(`\\b${connection.target}\\b`).test(line)
+      );
+    }
+    return false;
   };
 
-  const highlightLine = (line, node) => {
-    return node !== null && new RegExp(`\\b${node}\\b`).test(line);
+  const processText = useCallback((text) => {
+    if (!text) return [];
+    return text.split("\n").map((line) => line.trim());
+  }, []);
+
+  const highlightText = (lines, node, connection) => {
+    return lines.map((line) => ({
+      line,
+      isHighlighted: highlightLine(line, node, connection),
+    }));
+  };
+
+  const dotLines = useMemo(
+    () =>
+      highlightText(
+        processText(graphFormats.dot),
+        hoveredNode,
+        hoveredConnection
+      ),
+    [
+      graphFormats.dot,
+      hoveredNode,
+      hoveredConnection,
+      processText,
+      highlightText,
+    ]
+  );
+
+  const gmlLines = useMemo(
+    () =>
+      highlightText(
+        processText(graphFormats.gml),
+        hoveredNode,
+        hoveredConnection
+      ),
+    [
+      graphFormats.gml,
+      hoveredNode,
+      hoveredConnection,
+      processText,
+      highlightText,
+    ]
+  );
+
+  const graphmlLines = useMemo(
+    () =>
+      highlightText(
+        processText(graphFormats.graphml),
+        hoveredNode,
+        hoveredConnection
+      ),
+    [
+      graphFormats.graphml,
+      hoveredNode,
+      hoveredConnection,
+      processText,
+      highlightText,
+    ]
+  );
+
+  const handleMatrixMouseEnter = useCallback((rowIndex, cellIndex) => {
+    handleMouseEnterConnection({
+      source: rowIndex.toString(),
+      target: cellIndex.toString(),
+    });
+  }, []);
+
+  const handleMouseEnterNodeOrConnection = (line) => {
+    const connection = parseGmlLine(line) || parseGraphmlLine(line);
+    if (connection) {
+      handleMouseEnterConnection(connection);
+    } else {
+      const match = line.match(/id\s*=\s*"(\d+)"/);
+      if (match) {
+        handleMouseEnterNode(match[1]);
+      }
+    }
+  };
+
+  const toggleSection = (section) => {
+    setOpenSections((prevState) => ({
+      ...prevState,
+      [section]: !prevState[section],
+    }));
   };
 
   return (
     <div className="graph-formats">
       <h3>Graph Formats</h3>
+
       <div className="format-section">
-        <h4>Adjacency List</h4>
-        <div className="grid-container">
-          {graphFormats.adjacency_list &&
-            Object.entries(graphFormats.adjacency_list).map(
-              ([node, edges], index) => (
+        <h4 onClick={() => toggleSection("adjacencyList")}>
+          Adjacency List{" "}
+          {openSections.adjacencyList ? <FaChevronUp /> : <FaChevronDown />}
+        </h4>
+        {openSections.adjacencyList && (
+          <div className="grid-container">
+            {graphFormats.adjacency_list &&
+              Object.entries(graphFormats.adjacency_list).map(
+                ([node, edges], index) => (
+                  <div
+                    key={index}
+                    className={`grid-item ${isNodeHovered(node) ? "hovered" : ""}`}
+                    onMouseEnter={() => handleMouseEnterNode(node)}
+                    onMouseLeave={handleMouseLeave}
+                  >
+                    <strong>{Number(node)}:</strong>{" "}
+                    {edges.map((edge) => (
+                      <span
+                        key={edge}
+                        className={`edge-item ${isConnectionHovered({ source: node, target: edge }) ? "hovered" : ""}`}
+                        onMouseEnter={() =>
+                          handleMouseEnterConnection({
+                            source: node,
+                            target: edge,
+                          })
+                        }
+                        onMouseLeave={handleMouseLeave}
+                      >
+                        {edge},{" "}
+                      </span>
+                    ))}
+                  </div>
+                )
+              )}
+          </div>
+        )}
+      </div>
+
+      <div className="format-section">
+        <h4 onClick={() => toggleSection("adjacencyMatrix")}>
+          Adjacency Matrix{" "}
+          {openSections.adjacencyMatrix ? <FaChevronUp /> : <FaChevronDown />}
+        </h4>
+        {openSections.adjacencyMatrix && (
+          <div className="matrix-container">
+            <div className="matrix-row">
+              <div className="matrix-header-cell"></div>
+              {Array.from({ length: matrixSize }, (_, index) => (
                 <div
                   key={index}
-                  className={`grid-item ${isNodeHovered(node) ? "hovered" : ""}`}
-                  onMouseEnter={() => handleMouseEnter(node)}
+                  className="matrix-header-cell"
+                  onMouseEnter={() => handleMouseEnterNode(index)}
                   onMouseLeave={handleMouseLeave}
                 >
-                  <strong>{Number(node)}:</strong> {edges.join(", ")}
+                  <div className="matrix-head-cell-container">{index}</div>
                 </div>
-              )
-            )}
-        </div>
-      </div>
-      <div className="format-section">
-        <h4>Adjacency Matrix</h4>
-        <div className="matrix-container">
-          {/* Heading Row */}
-          <div className="matrix-row">
-            <div className="matrix-header-cell"></div>
-            {Array.from({ length: matrixSize }, (_, index) => (
-              <div key={index} className="matrix-header-cell">
-                <div className="matrix-head-cell-container">{index}</div>
-              </div>
-            ))}
+              ))}
+            </div>
+            {graphFormats.adjacency_matrix &&
+              graphFormats.adjacency_matrix.map((row, rowIndex) => (
+                <div
+                  key={rowIndex}
+                  className={`matrix-row ${isNodeHovered(rowIndex) ? "hovered" : ""}`}
+                  onMouseEnter={() => handleMouseEnterNode(rowIndex)}
+                  onMouseLeave={handleMouseLeave}
+                >
+                  <div className="matrix-row-id">{rowIndex}</div>
+                  {row.map((cell, cellIndex) => (
+                    <div
+                      key={cellIndex}
+                      className={`matrix-cell ${isConnectionHovered({ source: rowIndex, target: cellIndex }) ? "hovered" : ""}`}
+                      onMouseEnter={() =>
+                        handleMatrixMouseEnter(rowIndex, cellIndex)
+                      }
+                      onMouseLeave={handleMouseLeave}
+                    >
+                      {cell}
+                    </div>
+                  ))}
+                </div>
+              ))}
           </div>
-          {graphFormats.adjacency_matrix &&
-            graphFormats.adjacency_matrix.map((row, rowIndex) => (
-              <div
-                key={rowIndex}
-                className={`matrix-row ${isNodeHovered(rowIndex) ? "hovered" : ""}`}
-                onMouseEnter={() => handleMouseEnter(rowIndex)}
+        )}
+      </div>
+
+      <div className="format-section">
+        <h4 onClick={() => toggleSection("dotFormat")}>
+          DOT Format{" "}
+          {openSections.dotFormat ? <FaChevronUp /> : <FaChevronDown />}
+        </h4>
+        {openSections.dotFormat && (
+          <pre>
+            {dotLines.map(({ line, isHighlighted }, index) => (
+              <span
+                key={index}
+                className={isHighlighted ? "highlight" : ""}
+                onMouseEnter={() =>
+                  handleMouseEnterConnection(parseDotLine(line))
+                }
                 onMouseLeave={handleMouseLeave}
               >
-                <div className="matrix-row-id">{rowIndex}</div>
-                {row.map((cell, cellIndex) => (
-                  <div key={cellIndex} className={`matrix-cell`}>
-                    {cell}
-                  </div>
-                ))}
-              </div>
+                {line}
+                <br />
+              </span>
             ))}
-        </div>
+          </pre>
+        )}
       </div>
+
       <div className="format-section">
-        <h4>DOT Format</h4>
-        <pre
-          className={
-            highlightLine(graphFormats.dot, hoveredNode) ? "hovered" : ""
-          }
-          onMouseEnter={() => handleMouseEnter(hoveredNode)}
-          onMouseLeave={handleMouseLeave}
-        >
-          {graphFormats.dot}
-        </pre>
+        <h4 onClick={() => toggleSection("gmlFormat")}>
+          GML Format{" "}
+          {openSections.gmlFormat ? <FaChevronUp /> : <FaChevronDown />}
+        </h4>
+        {openSections.gmlFormat && (
+          <pre>
+            {gmlLines.map(({ line, isHighlighted }, index) => (
+              <span
+                key={index}
+                className={isHighlighted ? "highlight" : ""}
+                onMouseEnter={() => handleMouseEnterNodeOrConnection(line)}
+                onMouseLeave={handleMouseLeave}
+              >
+                {line}
+                <br />
+              </span>
+            ))}
+          </pre>
+        )}
       </div>
+
       <div className="format-section">
-        <h4>GML Format</h4>
-        <pre
-          className={
-            highlightLine(graphFormats.gml, hoveredNode) ? "hovered" : ""
-          }
-          onMouseEnter={() => handleMouseEnter(hoveredNode)}
-          onMouseLeave={handleMouseLeave}
-        >
-          {graphFormats.gml}
-        </pre>
-      </div>
-      <div className="format-section">
-        <h4>GraphML Format</h4>
-        <pre
-          className={
-            highlightLine(graphFormats.graphml, hoveredNode) ? "hovered" : ""
-          }
-          onMouseEnter={() => handleMouseEnter(hoveredNode)}
-          onMouseLeave={handleMouseLeave}
-        >
-          {graphFormats.graphml}
-        </pre>
+        <h4 onClick={() => toggleSection("graphmlFormat")}>
+          GraphML Format{" "}
+          {openSections.graphmlFormat ? <FaChevronUp /> : <FaChevronDown />}
+        </h4>
+        {openSections.graphmlFormat && (
+          <pre>
+            {graphmlLines.map(({ line, isHighlighted }, index) => (
+              <span
+                key={index}
+                className={isHighlighted ? "highlight" : ""}
+                onMouseEnter={() => handleMouseEnterNodeOrConnection(line)}
+                onMouseLeave={handleMouseLeave}
+              >
+                {line}
+                <br />
+              </span>
+            ))}
+          </pre>
+        )}
       </div>
     </div>
   );
+};
+
+const parseDotLine = (line) => {
+  const match = line.match(/(\d+)\s*--\s*(\d+)/);
+  return match ? { source: match[1], target: match[2] } : null;
+};
+
+const parseGmlLine = (line) => {
+  const match = line.match(/source (\d+)\s*target (\d+)/);
+  return match ? { source: match[1], target: match[2] } : null;
+};
+
+const parseGraphmlLine = (line) => {
+  const match = line.match(/source="(\d+)"\s*target="(\d+)"/);
+  return match ? { source: match[1], target: match[2] } : null;
 };
 
 export default LearnGraphFormats;

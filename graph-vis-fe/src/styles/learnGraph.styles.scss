@@ -31,6 +31,10 @@
       color: white;
       border-bottom: 1px solid white;
       padding-bottom: 5px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
     }
 
     pre {
@@ -39,6 +43,10 @@
       border-radius: 5px;
       overflow-x: auto;
       transition: background-color 0.3s;
+
+      .highlight {
+        background-color: #fb6161;
+      }
 
       &.hovered {
         background-color: #fb6161;
@@ -57,18 +65,13 @@
       padding: 6px;
       border-radius: 3px;
       word-break: break-word;
-      transition: background-color 0.3s;
-
-      &.hovered {
-        background-color: #fb6161;
-      }
     }
 
     .matrix-container {
       display: flex;
       flex-direction: column;
       border-radius: 5px;
-      overflow-x: scroll;
+      overflow-x: auto;
       max-width: 100%;
       white-space: nowrap;
     }
@@ -86,17 +89,13 @@
       &:last-child {
         border-bottom: none;
       }
-
-      &.hovered {
-        background-color: #fb6161;
-      }
     }
 
     .matrix-header-cell {
       background-color: #333;
       padding: 0px;
-      min-width: 12px;
-      max-width: 12px;
+      min-width: 20px;
+      max-width: 20px;
 
       .matrix-head-cell-container {
         transform: scale(0.7) translateX(-3px);
@@ -106,12 +105,11 @@
 
     .matrix-header-cell,
     .matrix-cell {
-      min-width: 12px;
-      max-width: 12px;
+      min-width: 20px;
+      max-width: 20px;
       padding: 3px;
       text-align: center;
       border-right: 1px solid #555;
-      transition: background-color 0.3s;
 
       &:first-child {
         min-width: 22px;
@@ -121,24 +119,23 @@
       &:last-child {
         border-right: none;
       }
-
-      &.hovered {
-        background-color: #fb6161;
-      }
     }
 
     .matrix-row-id {
-      min-width: 18px;
+      min-width: 22px;
       padding: 5px;
       text-align: center;
       background-color: #333;
       color: white;
       border-right: 1px solid #555;
-      transition: background-color 0.3s;
+    }
 
-      &.hovered {
-        background-color: #fb6161;
-      }
+    .hovered {
+      background-color: #fb6161 !important;
+    }
+
+    .edge-item:hover {
+      cursor: pointer;
     }
   }
 }
