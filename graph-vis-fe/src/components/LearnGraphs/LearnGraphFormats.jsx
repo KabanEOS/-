@@ -1,12 +1,11 @@
 import React, { useState, useMemo, useCallback } from "react";
 import "../../styles/learnGraph.styles.scss";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
+import { CSSTransition } from "react-transition-group";
 
 const LearnGraphFormats = ({ graphFormats }) => {
   const [hoveredNode, setHoveredNode] = useState(null);
-  console.log("🚀 ~ LearnGraphFormats ~ hoveredNode:", hoveredNode);
   const [hoveredConnection, setHoveredConnection] = useState(null);
-  console.log("🚀 ~ LearnGraphFormats ~ hoveredConnection:", hoveredConnection);
   const [openSections, setOpenSections] = useState({
     adjacencyList: true,
     adjacencyMatrix: true,
@@ -135,7 +134,7 @@ const LearnGraphFormats = ({ graphFormats }) => {
     if (connection) {
       handleMouseEnterConnection(connection);
     } else {
-      const match = line.match(/id\s*=\s*"(\d+)"/);
+      const match = line.match(/id\s*=\s*"(\d+)"/) || line.match(/id\s+(\d+)/);
       if (match) {
         handleMouseEnterNode(match[1]);
       }
@@ -158,7 +157,12 @@ const LearnGraphFormats = ({ graphFormats }) => {
           Adjacency List{" "}
           {openSections.adjacencyList ? <FaChevronUp /> : <FaChevronDown />}
         </h4>
-        {openSections.adjacencyList && (
+        <CSSTransition
+          in={openSections.adjacencyList}
+          timeout={300}
+          classNames="slide"
+          unmountOnExit
+        >
           <div className="grid-container">
             {graphFormats.adjacency_list &&
               Object.entries(graphFormats.adjacency_list).map(
@@ -189,7 +193,7 @@ const LearnGraphFormats = ({ graphFormats }) => {
                 )
               )}
           </div>
-        )}
+        </CSSTransition>
       </div>
 
       <div className="format-section">
@@ -197,7 +201,12 @@ const LearnGraphFormats = ({ graphFormats }) => {
           Adjacency Matrix{" "}
           {openSections.adjacencyMatrix ? <FaChevronUp /> : <FaChevronDown />}
         </h4>
-        {openSections.adjacencyMatrix && (
+        <CSSTransition
+          in={openSections.adjacencyMatrix}
+          timeout={300}
+          classNames="slide"
+          unmountOnExit
+        >
           <div className="matrix-container">
             <div className="matrix-row">
               <div className="matrix-header-cell"></div>
@@ -236,7 +245,7 @@ const LearnGraphFormats = ({ graphFormats }) => {
                 </div>
               ))}
           </div>
-        )}
+        </CSSTransition>
       </div>
 
       <div className="format-section">
@@ -244,7 +253,12 @@ const LearnGraphFormats = ({ graphFormats }) => {
           DOT Format{" "}
           {openSections.dotFormat ? <FaChevronUp /> : <FaChevronDown />}
         </h4>
-        {openSections.dotFormat && (
+        <CSSTransition
+          in={openSections.dotFormat}
+          timeout={300}
+          classNames="slide"
+          unmountOnExit
+        >
           <pre>
             {dotLines.map(({ line, isHighlighted }, index) => (
               <span
@@ -260,7 +274,7 @@ const LearnGraphFormats = ({ graphFormats }) => {
               </span>
             ))}
           </pre>
-        )}
+        </CSSTransition>
       </div>
 
       <div className="format-section">
@@ -268,7 +282,12 @@ const LearnGraphFormats = ({ graphFormats }) => {
           GML Format{" "}
           {openSections.gmlFormat ? <FaChevronUp /> : <FaChevronDown />}
         </h4>
-        {openSections.gmlFormat && (
+        <CSSTransition
+          in={openSections.gmlFormat}
+          timeout={300}
+          classNames="slide"
+          unmountOnExit
+        >
           <pre>
             {gmlLines.map(({ line, isHighlighted }, index) => (
               <span
@@ -282,7 +301,7 @@ const LearnGraphFormats = ({ graphFormats }) => {
               </span>
             ))}
           </pre>
-        )}
+        </CSSTransition>
       </div>
 
       <div className="format-section">
@@ -290,7 +309,12 @@ const LearnGraphFormats = ({ graphFormats }) => {
           GraphML Format{" "}
           {openSections.graphmlFormat ? <FaChevronUp /> : <FaChevronDown />}
         </h4>
-        {openSections.graphmlFormat && (
+        <CSSTransition
+          in={openSections.graphmlFormat}
+          timeout={300}
+          classNames="slide"
+          unmountOnExit
+        >
           <pre>
             {graphmlLines.map(({ line, isHighlighted }, index) => (
               <span
@@ -304,7 +328,7 @@ const LearnGraphFormats = ({ graphFormats }) => {
               </span>
             ))}
           </pre>
-        )}
+        </CSSTransition>
       </div>
     </div>
   );
@@ -316,8 +340,12 @@ const parseDotLine = (line) => {
 };
 
 const parseGmlLine = (line) => {
-  const match = line.match(/source (\d+)\s*target (\d+)/);
-  return match ? { source: match[1], target: match[2] } : null;
+  const nodeMatch = line.match(/id (\d+)/);
+  if (nodeMatch) {
+    return { node: nodeMatch[1] };
+  }
+  const edgeMatch = line.match(/source (\d+)\s*target (\d+)/);
+  return edgeMatch ? { source: edgeMatch[1], target: edgeMatch[2] } : null;
 };
 
 const parseGraphmlLine = (line) => {
