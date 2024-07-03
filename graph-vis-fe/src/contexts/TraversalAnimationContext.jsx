@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from "react";
+import React, { createContext, useContext, useState, useRef } from "react";
 import { generateTraversalSequence } from "../services/api"; // Adjust the import path as needed
 
 // Create the context
@@ -16,6 +16,7 @@ export const TraversalAnimationProvider = ({ children }) => {
   const [currentNode, setCurrentNode] = useState(null);
   const [animationSpeed, setAnimationSpeed] = useState(50); // Default speed
   const [graph, setGraph] = useState(null);
+  const intervalRef = useRef(null);
 
   // Function to start traversal animation
   const startTraversalAnimation = (sequence) => {
@@ -23,17 +24,32 @@ export const TraversalAnimationProvider = ({ children }) => {
     const interval = setInterval(() => {
       if (index >= sequence.length) {
         clearInterval(interval);
+        setTraversalAnimationActive(false);
         return;
       }
-      const { type, id } = sequence[index];
-      if (type === "node") {
-        setTraversedNodes((prev) => [...prev, id]);
-        setCurrentNode(id);
-      } else if (type === "edge") {
-        setTraversedEdges((prev) => [...prev, id]);
+      const nodeId = sequence[index];
+      setTraversedNodes((prev) => {
+        const updatedNodes = [...prev, nodeId];
+        console.log("Traversed Nodes: ", updatedNodes);
+        return updatedNodes;
+      });
+      setCurrentNode(nodeId);
+      console.log("Current Node: ", nodeId);
+
+      if (index > 0) {
+        const edgeId = { source: sequence[index - 1], target: nodeId };
+        setTraversedEdges((prev) => {
+          const updatedEdges = [...prev, edgeId];
+          console.log("Traversed Edges: ", updatedEdges);
+          return updatedEdges;
+        });
       }
+
       index += 1;
-    }, 100 - animationSpeed);
+    }, 2 * animationSpeed);
+
+    intervalRef.current = interval; // Store interval ID in ref
+    setTraversalAnimationActive(true);
   };
 
   const requestAndStartTraversal = async (
@@ -42,9 +58,6 @@ export const TraversalAnimationProvider = ({ children }) => {
     algorithm,
     goalNode
   ) => {
-    setGraph(setGraph);
-    console.log("🚀 ~ requestAndStartTraversal ~ goalNode:", goalNode);
-    console.log("🚀 ~ requestAndStartTraversal ~ algorithm:", algorithm);
     if (!graph) {
       console.error("Graph data is not set");
       return;
@@ -63,6 +76,14 @@ export const TraversalAnimationProvider = ({ children }) => {
     }
   };
 
+  const stopTraversalAnimation = () => {
+    setTraversalAnimationActive(false);
+    setCurrentNode(null);
+    setTraversedNodes([]);
+    setTraversedEdges([]);
+    clearInterval(intervalRef.current); // Clear interval using ref
+  };
+
   return (
     <TraversalAnimationContext.Provider
       value={{
@@ -73,7 +94,8 @@ export const TraversalAnimationProvider = ({ children }) => {
         currentNode,
         animationSpeed,
         setAnimationSpeed,
-        requestAndStartTraversal, // Provide the new function
+        requestAndStartTraversal,
+        stopTraversalAnimation,
         setGraph,
       }}
     >

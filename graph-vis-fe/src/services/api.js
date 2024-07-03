@@ -36,7 +36,6 @@ export const generateRandomBuildGraph = async (
     connectivity: connectivity,
     additional_params: additionalParams,
   });
-  console.log("🚀 ~ response:", response);
   return response.data;
 };
 

@@ -29,7 +29,7 @@ const LearnGraphsControls = ({
   animationSpeed,
   setAnimationSpeed,
   isTraversalAnimationActive,
-  setTraversalAnimationActive,
+  handleClickTraversalAnimationButton,
 }) => {
   return (
     <div className="units-wrapper">
@@ -74,7 +74,7 @@ const LearnGraphsControls = ({
         buttonChangeValue={minMaxValues.ANIMATION_SPEED.buttonChangeValue}
       />
       <ButtonControl
-        onClick={() => setTraversalAnimationActive(!isTraversalAnimationActive)}
+        onClick={handleClickTraversalAnimationButton}
         label={
           isTraversalAnimationActive ? "Stop Traversal" : "Start Traversal"
         }

@@ -5,7 +5,6 @@ import LearnGraphFormats from "./../../components/LearnGraphs/LearnGraphFormats.
 import {
   validateGraphParameters,
   fetchAndGenerateGraph,
-  centerGraph,
 } from "../../components/LearnGraphs/LearnGraph.utils";
 import "../../styles/shared.styles.scss";
 import "../../styles/learnGraph.styles.scss";
@@ -30,7 +29,6 @@ const LearnGraphs = () => {
     validateGraphParameters(numNodes, initialEdges, connectivity);
 
   const [graphData, setGraphData] = useState({ nodes: [], edges: [] });
-  console.log("🚀 ~ LearnGraphs ~ graphData:", graphData);
   const [graphFormats, setGraphFormats] = useState({});
   const [error, setError] = useState(null);
   const [numEdges, setNumEdges] = useState(initialNumEdges);
@@ -55,19 +53,15 @@ const LearnGraphs = () => {
     translateY: 0,
   });
 
-  const handleTraversal = () => {
-    requestAndStartTraversal(graphData, startNode, algorithm, goalNode);
-  };
-
   // New states for traversal algorithm
   const [algorithm, setAlgorithm] = useState("bfs");
-  console.log("🚀 ~ LearnGraphs ~ algorithm:", algorithm);
   const [startNode, setStartNode] = useState(1);
   const [goalNode, setGoalNode] = useState(null);
   const {
     setTraversalAnimationActive,
     isTraversalAnimationActive,
     setGraph,
+    stopTraversalAnimation,
     animationSpeed,
     setAnimationSpeed,
     requestAndStartTraversal,
@@ -88,9 +82,13 @@ const LearnGraphs = () => {
       optimalDistance,
       setGraphFormats // Pass the setGraphFormats callback
     );
-
-    setGraph(graphData);
   }, [numNodes, numEdges, maxIterations, optimalDistance, connectivity]);
+
+  useEffect(() => {
+    if (graphData.nodes.length > 0) {
+      setGraph(graphData);
+    }
+  }, [graphData, setGraph]);
 
   const handleNumNodesChange = (e) => {
     const newNumNodes = Number(e.target.value);
@@ -125,6 +123,18 @@ const LearnGraphs = () => {
     setConnectivity(newConnectivity);
     setNumEdges(validatedEdges);
     setInfoMessage(infoMessage);
+  };
+
+  const handleTraversal = () => {
+    requestAndStartTraversal(graphData, startNode, algorithm, goalNode);
+  };
+
+  const handleClickTraversalAnimationButton = () => {
+    if (isTraversalAnimationActive) {
+      stopTraversalAnimation();
+    } else {
+      handleTraversal();
+    }
   };
 
   const handleWheel = (event) => {
@@ -195,7 +205,9 @@ const LearnGraphs = () => {
           handleTraversal={handleTraversal}
           animationSpeed={animationSpeed}
           setAnimationSpeed={setAnimationSpeed}
-          setTraversalAnimationActive={setTraversalAnimationActive}
+          handleClickTraversalAnimationButton={
+            handleClickTraversalAnimationButton
+          }
           isTraversalAnimationActive={isTraversalAnimationActive}
         />
       </ControlDrawer>
