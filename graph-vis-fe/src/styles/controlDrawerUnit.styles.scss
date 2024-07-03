@@ -250,3 +250,23 @@
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
   }
 }
+
+.info-message {
+  color: #0056b3;
+  background-color: #e0f7ff;
+  padding: 10px 15px;
+  border-left: 4px solid #0056b3;
+  border-radius: 4px;
+  font-size: 1rem;
+  line-height: 1.5;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition:
+    background-color 0.3s ease,
+    color 0.3s ease;
+  margin: 10px 15px;
+}
+
+.info-message:hover {
+  background-color: #dcebfc;
+  color: #003d80;
+}

@@ -3,7 +3,7 @@
 export const defaultControls = {
   NUMBER_OF_NODES: { value: 30, visible: true },
   NUMBER_OF_EDGES: { value: 50, visible: true },
-  OPTIMAL_DISTANCE: { value: 100, visible: false },
+  OPTIMAL_DISTANCE: { value: 85, visible: false },
   MAX_ITERATIONS: { value: 8000, visible: true },
   NODE_SIZE: { value: 25, visible: true },
 };
@@ -11,16 +11,17 @@ export const defaultControls = {
 export const minMaxValues = {
   NUMBER_OF_NODES: { min: 1, max: 1000, buttonChangeValue: 5 },
   NUMBER_OF_EDGES: { min: 1, max: 1000, buttonChangeValue: 5 },
-  OPTIMAL_DISTANCE: { min: 1, max: 300, buttonChangeValue: 10 },
+  OPTIMAL_DISTANCE: { min: 1, max: 1000, buttonChangeValue: 50 },
   MAX_ITERATIONS: { min: 1, max: 16000, buttonChangeValue: 500 },
-  NODE_SIZE: { min: 5, max: 50, buttonChangeValue: 5 },
+  NODE_SIZE: { min: 5, max: 50, buttonChangeValue: 1 },
 };
 
 export const descriptions = {
   NUMBER_OF_NODES: "Sets the number of nodes in the graph.",
   NUMBER_OF_EDGES: "Sets the number of edges in the graph.",
-  OPTIMAL_DISTANCE: "Sets the optimal distance between nodes.",
+  OPTIMAL_DISTANCE:
+    "Sets the ideal distance between nodes in the graph. It influences the repulsive and attractive forces applied during the layout algorithm.",
   MAX_ITERATIONS:
-    "Sets the maximum number of iterations for the graph algorithm.",
+    "Sets the maximum number of iterations the graph algorithm will perform. More iterations can lead to a more stable and visually pleasing layout but will take longer to compute.",
   NODE_SIZE: "Sets the size of the nodes.",
 };

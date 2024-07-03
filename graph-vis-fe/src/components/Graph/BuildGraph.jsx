@@ -23,6 +23,9 @@ const BuildGraph = ({
     return null;
   }
 
+  // ADJUST node id font size in build graph
+  const nodeIdFontSize = nodeSize * 2.3;
+
   // Calculate remoteness levels for nodes
   const calculateRemotenessLevels = () => {
     if (!hoveredNode) return {};
@@ -249,7 +252,7 @@ const BuildGraph = ({
             y={node.y * transform.scale + transform.translateY}
             textAnchor="middle"
             alignmentBaseline="central"
-            fontSize={nodeSize * 1.2} // Increase font size based on node size
+            fontSize={nodeIdFontSize} // Increase font size based on node size
             fill="white"
           >
             {node.id}

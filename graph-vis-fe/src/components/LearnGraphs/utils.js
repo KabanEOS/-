@@ -93,6 +93,7 @@ export const centerGraph = (nodes, setTransform, svgWidth, svgHeight) => {
   const containerWidth = svgWidth;
   const containerHeight = svgHeight;
 
+  // ADJUST nodes initial position
   const initialScale = (containerHeight * 0.8) / graphHeight;
   const adjustedGraphHeight = graphHeight * initialScale;
   const translateY = containerHeight * 0.1 - minY * initialScale;

@@ -35,11 +35,13 @@ const LearnGraphs = () => {
   const [infoMessage, setInfoMessage] = useState(initialInfoMessage);
   const [maxIterations, setMaxIterations] = useState(1000);
   const [optimalDistance, setOptimalDistance] = useState(100);
+
+  // ADJUST initial node size in build graph
   const [nodeSize, setNodeSize] = useState(
     Math.floor(
-      window.innerWidth > 1600
-        ? window.innerWidth * 0.008
-        : window.innerWidth * 0.012
+      window.innerWidth < 1400
+        ? window.innerWidth * 0.02
+        : window.innerWidth * 0.006
     )
   );
   const [svgWidth, setSvgWidth] = useState(3000);

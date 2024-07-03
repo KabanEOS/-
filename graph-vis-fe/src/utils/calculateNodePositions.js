@@ -1,3 +1,5 @@
+// HERE  calculate node positions
+
 export const calculateNodePositions = (
   nodes,
   edges,
