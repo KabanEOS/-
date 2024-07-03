@@ -2,7 +2,7 @@
   position: absolute;
   top: 0;
   right: 0;
-  width: 25%;
+  width: 25vw;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.8);
   color: white;
@@ -104,6 +104,11 @@
       }
       &:last-child {
         border-right: none;
+        max-width: 12px;
+      }
+      // hover
+      &:hover {
+        background-color: #fb6161 !important;
       }
     }
 
@@ -114,6 +119,9 @@
       background-color: #333;
       color: white;
       border-right: 1px solid #555;
+      &:hover {
+        background-color: #fb6161 !important;
+      }
     }
   }
 
@@ -127,17 +135,28 @@
 
   .slide-enter {
     max-height: 0;
+    opacity: 0;
     overflow: hidden;
   }
+
   .slide-enter-active {
-    max-height: 1000px; /* Adjust based on your content's height */
-    transition: max-height 300ms ease-in-out;
+    max-height: 500px; // Adjust as necessary
+    opacity: 1;
+    transition:
+      max-height 300ms ease-in-out,
+      opacity 300ms ease-in-out;
   }
+
   .slide-exit {
-    max-height: 1000px; /* Adjust based on your content's height */
+    max-height: 500px; // Adjust as necessary
+    opacity: 1;
   }
+
   .slide-exit-active {
     max-height: 0;
-    transition: max-height 300ms ease-in-out;
+    opacity: 0;
+    transition:
+      max-height 300ms ease-in-out,
+      opacity 300ms ease-in-out;
   }
 }

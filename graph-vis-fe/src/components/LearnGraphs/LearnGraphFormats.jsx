@@ -1,11 +1,18 @@
-import React, { useState, useMemo, useCallback } from "react";
+// src/components/LearnGraphs/LearnGraphFormats.jsx
+import React, { useMemo, useState, useCallback } from "react";
 import "../../styles/learnGraph.styles.scss";
 import { FaChevronDown, FaChevronUp } from "react-icons/fa";
 import { CSSTransition } from "react-transition-group";
+import { useHover } from "../../contexts/HoverContext.jsx";
 
 const LearnGraphFormats = ({ graphFormats }) => {
-  const [hoveredNode, setHoveredNode] = useState(null);
-  const [hoveredConnection, setHoveredConnection] = useState(null);
+  const {
+    hoveredNode,
+    hoveredConnection,
+    handleMouseEnterNode,
+    handleMouseEnterConnection,
+    handleMouseLeave,
+  } = useHover();
   const [openSections, setOpenSections] = useState({
     adjacencyList: true,
     adjacencyMatrix: true,
@@ -17,24 +24,6 @@ const LearnGraphFormats = ({ graphFormats }) => {
   const matrixSize = graphFormats.adjacency_matrix
     ? graphFormats.adjacency_matrix.length
     : 0;
-
-  const handleMouseEnterNode = (node) => {
-    setHoveredNode(node.toString());
-    setHoveredConnection(null);
-  };
-
-  const handleMouseEnterConnection = (connection) => {
-    setHoveredConnection({
-      source: connection.source.toString(),
-      target: connection.target.toString(),
-    });
-    setHoveredNode(null);
-  };
-
-  const handleMouseLeave = () => {
-    setHoveredNode(null);
-    setHoveredConnection(null);
-  };
 
   const isNodeHovered = useCallback(
     (node) => node.toString() === hoveredNode,
@@ -211,12 +200,7 @@ const LearnGraphFormats = ({ graphFormats }) => {
             <div className="matrix-row">
               <div className="matrix-header-cell"></div>
               {Array.from({ length: matrixSize }, (_, index) => (
-                <div
-                  key={index}
-                  className="matrix-header-cell"
-                  onMouseEnter={() => handleMouseEnterNode(index)}
-                  onMouseLeave={handleMouseLeave}
-                >
+                <div key={index} className="matrix-header-cell">
                   <div className="matrix-head-cell-container">{index}</div>
                 </div>
               ))}
@@ -340,12 +324,16 @@ const parseDotLine = (line) => {
 };
 
 const parseGmlLine = (line) => {
-  const nodeMatch = line.match(/id (\d+)/);
+  const match = line.match(/source\s+(\d+)\s+target\s+(\d+)/);
+  if (match) {
+    return { source: match[1], target: match[2] };
+  }
+
+  const nodeMatch = line.match(/id\s+(\d+)/);
   if (nodeMatch) {
     return { node: nodeMatch[1] };
   }
-  const edgeMatch = line.match(/source (\d+)\s*target (\d+)/);
-  return edgeMatch ? { source: edgeMatch[1], target: edgeMatch[2] } : null;
+  return null;
 };
 
 const parseGraphmlLine = (line) => {

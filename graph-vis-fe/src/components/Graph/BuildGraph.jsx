@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-
+import React from "react";
 import PropTypes from "prop-types";
+import { useHover } from "../../contexts/HoverContext.jsx";
 import "./../../styles/buildGraph.styles.scss";
 
 const BuildGraph = ({
@@ -11,36 +11,144 @@ const BuildGraph = ({
   svgWidth,
   svgHeight,
 }) => {
-  const [hoveredNodeId, setHoveredNodeId] = useState(null);
+  const {
+    hoveredNode,
+    hoveredConnection,
+    handleMouseEnterNode,
+    handleMouseEnterConnection,
+    handleMouseLeave,
+  } = useHover();
 
   if (!nodes || !edges) {
     return null;
   }
 
-  // console.log("Nodes - from BuildGraph: ", nodes);
-  // console.log("Edges - from BuildGraph: ", edges);
+  // Calculate remoteness levels for nodes
+  const calculateRemotenessLevels = () => {
+    if (!hoveredNode) return {};
+    const levels = {};
+    const queue = [{ id: hoveredNode, level: 0 }];
+    const visited = new Set([hoveredNode]);
 
-  const minX = Math.min(...nodes.map((node) => node.x));
-  const maxX = Math.max(...nodes.map((node) => node.x));
-  const minY = Math.min(...nodes.map((node) => node.y));
-  const maxY = Math.max(...nodes.map((node) => node.y));
-  const graphWidth = maxX - minX;
-  const graphHeight = maxY - minY;
+    while (queue.length > 0) {
+      const { id, level } = queue.shift();
+      levels[id] = level;
 
-  // Calculate the center of the graph
-  const centerX = (minX + maxX) / 2;
-  const centerY = (minY + maxY) / 2;
-  // console.log("Graph center: ", { centerX, centerY });
+      edges.forEach((edge) => {
+        const targetNode =
+          edge.source.toString() === id.toString()
+            ? edge.target.toString()
+            : edge.target.toString() === id.toString()
+              ? edge.source.toString()
+              : null;
+        if (targetNode && !visited.has(targetNode)) {
+          visited.add(targetNode);
+          queue.push({ id: targetNode, level: level + 1 });
+        }
+      });
+    }
 
-  // Calculate positions for the dots in the middle of the edges of the red rectangle
-  const midTopX = centerX * transform.scale + transform.translateX;
-  const midTopY = minY * transform.scale + transform.translateY;
-  const midBottomX = centerX * transform.scale + transform.translateX;
-  const midBottomY = maxY * transform.scale + transform.translateY;
-  const midLeftX = minX * transform.scale + transform.translateX;
-  const midLeftY = centerY * transform.scale + transform.translateY;
-  const midRightX = maxX * transform.scale + transform.translateX;
-  const midRightY = centerY * transform.scale + transform.translateY;
+    return levels;
+  };
+
+  const remotenessLevels = calculateRemotenessLevels();
+
+  // Get gradient ID based on remoteness level
+  const getEdgeGradientId = (edge) => {
+    const sourceLevel = remotenessLevels[edge.source];
+    const targetLevel = remotenessLevels[edge.target];
+
+    if (sourceLevel === 0 || targetLevel === 0) {
+      return `gradient-red-to-semi-${edge.source}-${edge.target}`;
+    }
+    if (sourceLevel === 1 || targetLevel === 1) {
+      return `gradient-semi-to-blue-${edge.source}-${edge.target}`;
+    }
+    return `gradient-default-${edge.source}-${edge.target}`;
+  };
+
+  // Get edge class based on remoteness level
+  const getEdgeClass = (edge) => {
+    const sourceLevel = remotenessLevels[edge.source];
+    const targetLevel = remotenessLevels[edge.target];
+
+    if (
+      hoveredConnection &&
+      hoveredConnection.source === edge.source.toString() &&
+      hoveredConnection.target === edge.target.toString()
+    ) {
+      return "hovered-edge-1";
+    }
+    if (sourceLevel >= 0 || targetLevel >= 0) {
+      return "hovered-edge-2";
+    }
+    return "";
+  };
+
+  // Get node class based on remoteness level
+  const getNodeClass = (node) => {
+    const nodeLevel = remotenessLevels[node.id];
+
+    if (
+      hoveredConnection &&
+      (node.id.toString() === hoveredConnection.source ||
+        node.id.toString() === hoveredConnection.target)
+    ) {
+      return "hovered-node-2";
+    }
+    if (nodeLevel === 0) {
+      return "hovered-node-1";
+    }
+    if (nodeLevel === 1) {
+      return "hovered-node-2";
+    }
+    if (nodeLevel === 2) {
+      return "hovered-node-3";
+    }
+    return "";
+  };
+
+  const getGradientDefinition = (
+    edge,
+    sourceNode,
+    targetNode,
+    gradientType
+  ) => (
+    <linearGradient
+      key={gradientType}
+      id={gradientType}
+      gradientUnits="userSpaceOnUse"
+      x1={
+        remotenessLevels[edge.source] <= remotenessLevels[edge.target]
+          ? sourceNode.x * transform.scale + transform.translateX
+          : targetNode.x * transform.scale + transform.translateX
+      }
+      y1={
+        remotenessLevels[edge.source] <= remotenessLevels[edge.target]
+          ? sourceNode.y * transform.scale + transform.translateY
+          : targetNode.y * transform.scale + transform.translateY
+      }
+      x2={
+        remotenessLevels[edge.source] <= remotenessLevels[edge.target]
+          ? targetNode.x * transform.scale + transform.translateX
+          : sourceNode.x * transform.scale + transform.translateX
+      }
+      y2={
+        remotenessLevels[edge.source] <= remotenessLevels[edge.target]
+          ? targetNode.y * transform.scale + transform.translateY
+          : sourceNode.y * transform.scale + transform.translateY
+      }
+    >
+      <stop
+        offset="0%"
+        stopColor={gradientType.includes("red") ? "#fb6161" : "#ffc1c1"}
+      />
+      <stop
+        offset="100%"
+        stopColor={gradientType.includes("semi") ? "#ffc1c1" : "#85affb"}
+      />
+    </linearGradient>
+  );
 
   return (
     <svg
@@ -48,6 +156,38 @@ const BuildGraph = ({
       style={{ width: "100%", height: "100%" }}
       viewBox={`0 0 ${svgWidth} ${svgHeight}`} // Use the passed SVG dimensions
     >
+      <defs>
+        {edges.map((edge, index) => {
+          const sourceNode = nodes.find((node) => node.id === edge.source);
+          const targetNode = nodes.find((node) => node.id === edge.target);
+          return getGradientDefinition(
+            edge,
+            sourceNode,
+            targetNode,
+            `gradient-default-${edge.source}-${edge.target}`
+          );
+        })}
+        {edges.map((edge, index) => {
+          const sourceNode = nodes.find((node) => node.id === edge.source);
+          const targetNode = nodes.find((node) => node.id === edge.target);
+          return getGradientDefinition(
+            edge,
+            sourceNode,
+            targetNode,
+            `gradient-red-to-semi-${edge.source}-${edge.target}`
+          );
+        })}
+        {edges.map((edge, index) => {
+          const sourceNode = nodes.find((node) => node.id === edge.source);
+          const targetNode = nodes.find((node) => node.id === edge.target);
+          return getGradientDefinition(
+            edge,
+            sourceNode,
+            targetNode,
+            `gradient-semi-to-blue-${edge.source}-${edge.target}`
+          );
+        })}
+      </defs>
       {edges.map((edge, index) => {
         const sourceNode = nodes.find((node) => node.id === edge.source);
         const targetNode = nodes.find((node) => node.id === edge.target);
@@ -56,8 +196,7 @@ const BuildGraph = ({
           !targetNode ||
           isNaN(sourceNode.x) ||
           isNaN(sourceNode.y) ||
-          isNaN(targetNode.x) ||
-          isNaN(targetNode.y)
+          isNaN(targetNode.x)
         ) {
           return null;
         }
@@ -69,26 +208,42 @@ const BuildGraph = ({
             y1={sourceNode.y * transform.scale + transform.translateY}
             x2={targetNode.x * transform.scale + transform.translateX}
             y2={targetNode.y * transform.scale + transform.translateY}
-            className="edge"
+            className={`edge ${getEdgeClass(edge)}`}
+            stroke={`url(#${getEdgeGradientId(edge)})`}
+            onMouseEnter={() =>
+              handleMouseEnterConnection({
+                source: edge.source.toString(),
+                target: edge.target.toString(),
+              })
+            }
+            onMouseLeave={handleMouseLeave}
           />
         );
       })}
       {nodes.map((node) => (
-        <circle
+        <g
           key={node.id}
-          cx={node.x * transform.scale + transform.translateX}
-          cy={node.y * transform.scale + transform.translateY}
-          r={nodeSize * window.innerWidth * 0.001} // Adjust radius based on scale
-          className="node"
-          onMouseEnter={() => {
-            console.log(`Hovering over node: ${node.id}`);
-            setHoveredNodeId(node.id);
-          }}
-          onMouseLeave={() => setHoveredNodeId(null)}
-          fill={hoveredNodeId === node.id ? "red" : "blue"} // Change color on hover
-        />
+          onMouseEnter={() => handleMouseEnterNode(node.id)}
+          onMouseLeave={handleMouseLeave}
+        >
+          <circle
+            cx={node.x * transform.scale + transform.translateX}
+            cy={node.y * transform.scale + transform.translateY}
+            r={nodeSize * window.innerWidth * 0.001} // Adjust radius based on scale
+            className={`node ${getNodeClass(node)}`}
+          />
+          <text
+            x={node.x * transform.scale + transform.translateX}
+            y={node.y * transform.scale + transform.translateY}
+            textAnchor="middle"
+            alignmentBaseline="central"
+            fontSize={nodeSize * 1.2} // Increase font size based on node size
+            fill="white"
+          >
+            {node.id}
+          </text>
+        </g>
       ))}
-      {/* Red rectangle */}
     </svg>
   );
 };

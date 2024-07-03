@@ -14,15 +14,13 @@ export const calculateNodePositions = (
   const k = optimalDistance || Math.sqrt(area / nodes.length);
   let temperature = width / 10;
 
-  // Initialize positions in the center of the container to avoid initial spread
+  // Initialize positions with better spread
   nodes.forEach((node) => {
     positions[node.id] = {
-      x: (Math.random() * 0.8 + 0.1) * width,
-      y: (Math.random() * 0.8 + 0.1) * height,
+      x: (Math.random() * 0.6 + 0.4) * width, // 5% to 95% of the width
+      y: (Math.random() * 0.2 + 0.05) * height, // 5% to 95% of the height
     };
   });
-
-  // console.log("Initial positions:", positions);
 
   // Function to calculate repulsive force
   const repulsiveForce = (distance) => k ** 2 / distance;

@@ -38,8 +38,8 @@ const LearnGraphs = () => {
   const [nodeSize, setNodeSize] = useState(
     Math.floor(
       window.innerWidth > 1600
-        ? window.innerWidth * 0.012
-        : window.innerWidth * 0.018
+        ? window.innerWidth * 0.008
+        : window.innerWidth * 0.012
     )
   );
   const [svgWidth, setSvgWidth] = useState(3000);
@@ -104,7 +104,6 @@ const LearnGraphs = () => {
   };
 
   const handleWheel = (event) => {
-    event.preventDefault();
     const { deltaY } = event;
     const scaleAmount = -deltaY * 0.01;
     const newScale = Math.min(Math.max(transform.scale + scaleAmount, 0.1), 10);
@@ -126,18 +125,11 @@ const LearnGraphs = () => {
 
   return (
     <div className="show-over-shadow">
-      <div className="centralize">
-        <h2>Learn Graphs</h2>
-        <p>
-          Here you can learn about different graph algorithms, representations,
-          and use cases.
-        </p>
-      </div>
       <ControlDrawer
         onToggle={undefined}
         isInitiallyOpen={true}
         isHomeButtonShowed={true}
-        maxWidth={350}
+        maxWidth={"250px"}
       >
         <LearnGraphsControls
           numNodes={numNodes}

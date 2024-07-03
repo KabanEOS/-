@@ -13,7 +13,7 @@ import Shadow from "./components/Shadow.jsx";
 import Signature from "./components/Signature.jsx";
 import { ControlDrawerProvider } from "./contexts/ControlDrawerContext.jsx";
 import ControlDrawer from "./components/ControlDrawer/ControlDrawer.jsx";
-
+import { HoverProvider } from "./contexts/HoverContext.jsx";
 const App = () => {
   const nodes = [
     { id: 1, name: "Graph Builder", link: "/graph-builder" },
@@ -44,9 +44,9 @@ const App = () => {
 
 const AppWrapper = () => (
   <Router>
-    {/* <ControlDrawerProvider> */}
-    <App />
-    {/* </ControlDrawerProvider> */}
+    <HoverProvider>
+      <App />
+    </HoverProvider>
   </Router>
 );
 
