@@ -1,8 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:5001";
-
-// it's legacy actually but I will hold it to show the path
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const getBfsTraversal = async (graph) => {
   const response = await axios.post(`${API_URL}/traversal/bfs`, graph);
