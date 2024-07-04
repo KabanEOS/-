@@ -1,1 +1,2 @@
-web: gunicorn app:app
+web: gunicorn app:app --chdir graph-vis-be
+release: npm install --prefix graph-vis-fe && npm run build --prefix graph-vis-fe
