@@ -1,0 +1,7 @@
+{
+    "root": "graph-vis-fe/build/", 
+    "routes": {
+      "/**": "index.html"
+    }
+  }
+  

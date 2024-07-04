@@ -1,6 +1,7 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
 from graph_algorithms import generate_traversal_path
+import os
 from graph_algorithms_v1 import (
     generate_bfs_sequence_v1,
     generate_dfs_sequence_v1,
@@ -14,6 +15,10 @@ from models import GraphDTO
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
+
+REACT_APP_API_URL = os.environ.get(
+    "REACT_APP_API_URL", "http://127.0.0.1:5001")
+port = int(os.environ.get("PORT", 5001))
 
 # traversal first approach hard to delete but will do ultimately
 
@@ -101,4 +106,4 @@ def get_traversal():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, port=5001)
+    app.run(host='0.0.0.0', port=port)
