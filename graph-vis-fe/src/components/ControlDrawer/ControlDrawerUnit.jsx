@@ -1,70 +1,63 @@
 import React from "react";
 import PropTypes from "prop-types";
+
 import "./../../styles/controlDrawerUnit.styles.scss";
+import NumericControl from "./ControlUnits/NumericControl.jsx";
+import DropdownControl from "./ControlUnits/DropdownControl";
 
 const ControlDrawerUnit = ({
+  type,
   name,
   value,
   min,
   max,
+  options,
   onChange,
   description,
+  buttonChangeValue,
 }) => {
-  const incrementValue = () => {
-    onChange(name, Math.min(value + 1, max));
-  };
-
-  const decrementValue = () => {
-    onChange(name, Math.max(value - 1, min));
-  };
-
-  const handleInputChange = (e) => {
-    onChange(name, parseFloat(e.target.value));
-  };
-
-  const handleSliderChange = (e) => {
-    onChange(name, parseFloat(e.target.value));
-  };
-
-  return (
-    <div className="unit-container">
-      <div className="number-values">
-        <div className="unit-name">{name}</div>
-        <button onClick={decrementValue}>-</button>
-        <input
-          className="unit-input"
-          type="number"
-          id={name}
+  switch (type) {
+    case "numeric":
+      return (
+        <NumericControl
           name={name}
           value={value}
           min={min}
           max={max}
-          onChange={handleInputChange}
+          onChange={onChange}
+          description={description}
+          buttonChangeValue={buttonChangeValue}
         />
-        <button onClick={incrementValue}>+</button>
-      </div>
-      <input
-        className="range-input"
-        type="range"
-        id={name}
-        name={name}
-        value={value}
-        min={min}
-        max={max}
-        onChange={handleSliderChange}
-      />
-      <div className="unit-description">{description}</div>
-    </div>
-  );
+      );
+    case "dropdown":
+      return (
+        <DropdownControl
+          name={name}
+          value={value}
+          options={options}
+          onChange={onChange}
+          description={description}
+        />
+      );
+    default:
+      return null;
+  }
 };
 
 ControlDrawerUnit.propTypes = {
+  type: PropTypes.string.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
-  min: PropTypes.number.isRequired,
-  max: PropTypes.number.isRequired,
+  value: PropTypes.oneOfType([
+    PropTypes.number,
+    PropTypes.string,
+    PropTypes.bool,
+  ]).isRequired,
+  min: PropTypes.number,
+  max: PropTypes.number,
+  options: PropTypes.arrayOf(PropTypes.string),
   onChange: PropTypes.func.isRequired,
   description: PropTypes.string,
+  buttonChangeValue: PropTypes.number,
 };
 
 export default ControlDrawerUnit;

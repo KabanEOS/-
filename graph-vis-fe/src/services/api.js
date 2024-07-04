@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://127.0.0.1:5001";
+const API_URL = process.env.REACT_APP_API_URL;
 
 export const getBfsTraversal = async (graph) => {
   const response = await axios.post(`${API_URL}/traversal/bfs`, graph);
@@ -33,6 +33,21 @@ export const generateRandomBuildGraph = async (
     num_edges: numEdges,
     connectivity: connectivity,
     additional_params: additionalParams,
+  });
+  return response.data;
+};
+
+export const generateTraversalSequence = async (
+  graph,
+  startNode,
+  algorithm,
+  goalNode = null
+) => {
+  const response = await axios.post(`${API_URL}/traversal`, {
+    graph: graph,
+    start_node: startNode,
+    algorithm: algorithm,
+    goal_node: goalNode,
   });
   return response.data;
 };

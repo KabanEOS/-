@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from "react";
 import ControlDrawer from "../components/ControlDrawer/ControlDrawer.jsx";
-const ControlDrawerContext = createContext();
+const ControlDrawerContext = createContext({});
 
 export const ControlDrawerProvider = ({ children, initialControls }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -16,7 +16,6 @@ export const ControlDrawerProvider = ({ children, initialControls }) => {
     <ControlDrawerContext.Provider
       value={{ isOpen, toggleDrawer, controls, updateControl }}
     >
-      <ControlDrawer />
       {children}
     </ControlDrawerContext.Provider>
   );
