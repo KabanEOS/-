@@ -20,7 +20,7 @@
   },
 "scripts": {
     "start": "react-scripts start",
-    "build": "react-scripts build --public-dir graph-vis-fe/public", 
+    "build": "./build-fe.sh",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
