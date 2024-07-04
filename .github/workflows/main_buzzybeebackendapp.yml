@@ -11,7 +11,8 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
       - name: Set up Python version
         uses: actions/setup-python@v1
@@ -28,6 +29,7 @@ jobs:
         run: |
           cd graph-vis-be
           pip install -r requirements.txt
+
       # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
@@ -66,9 +68,13 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
         with:
           app-name: 'BuzzyBeeBackendApp'
           slot-name: 'production'
+
+      - name: Configure startup command
+        run: |
+          az webapp config set --name BuzzyBeeBackendApp --resource-group BuzzyBeeResourceGroup --startup-file "venv/bin/python app.py"
